@@ -21,18 +21,18 @@ func check<Element: Equatable & CustomStringConvertible>(_ key: String, if curre
 func validateRepository(_ repository: RepositoryQuery.Data.Repository) {
     var errorCount = 0
     errorCount += check("number of labels", if: repository.labels?.totalCount, is: 5)
-    errorCount += check("number of protected branches", if: repository.protectedBranches.totalCount, is: 1)
-    errorCount += check("number of repository topics", if: repository.repositoryTopics.totalCount, is: 6)
-    errorCount += check("code of conduct", if: repository.codeOfConduct?.name, is: "Contributor Covenant")
-    errorCount += check("description", if: repository.description, is: "Flexible UI Framework Designed for Swift")
+    errorCount += check("number of protected branches", if: repository.protectedBranches.totalCount, is: 0)
+    errorCount += check("number of repository topics", if: repository.repositoryTopics.totalCount, is: 0)
+    errorCount += check("code of conduct", if: repository.codeOfConduct?.name, is: nil)
+    errorCount += check("description", if: repository.description, is: "Validate Your GitHub Repository Settings")
     errorCount += check("has issues enabled", if: repository.hasIssuesEnabled, is: true)
     errorCount += check("has wiki enabled", if: repository.hasWikiEnabled, is: false)
     errorCount += check("homepage url", if: repository.homepageUrl, is: "http://www.tintpoint.com")
     errorCount += check("is archived", if: repository.isArchived, is: false)
-    errorCount += check("is private", if: repository.isPrivate, is: false)
-    errorCount += check("license", if: repository.licenseInfo?.name, is: "MIT License")
-    errorCount += check("name", if: repository.name, is: "Overlay")
-    errorCount += check("url", if: repository.url, is: "https://github.com/TintPoint/Overlay")
+    errorCount += check("is private", if: repository.isPrivate, is: true)
+    errorCount += check("license", if: repository.licenseInfo?.name, is: nil)
+    errorCount += check("name", if: repository.name, is: "BeforeSetup")
+    errorCount += check("url", if: repository.url, is: "https://github.com/TintPoint/BeforeSetup")
     if errorCount == 0 {
         print("☑ Congratulations! All tests are passed.")
     } else {
@@ -46,7 +46,7 @@ do {
     let urlString = "https://api.github.com/graphql"
     guard let url = URL(string: urlString) else { throw NetworkError.invalidBaseURLString(urlString) }
     let client = ApolloClient(networkTransport: HTTPNetworkTransport(url: url, configuration: configuration))
-    let query = RepositoryQuery(name: "Overlay", owner: "TintPoint")
+    let query = RepositoryQuery(name: "BeforeSetup", owner: "TintPoint")
     let group = DispatchGroup()
     client.fetch(query: query, queue: DispatchQueue(label: "network")) { result, error in
         defer {
