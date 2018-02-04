@@ -1,0 +1,50 @@
+query Repository($name: String!, $owner: String!) {
+  repository(name: $name, owner: $owner) {
+    labels {
+      nodes {
+        color
+        name
+      }
+      totalCount
+    }
+    protectedBranches {
+      nodes {
+        hasDismissableStaleReviews
+        hasRequiredReviews
+        hasRequiredStatusChecks
+        hasRestrictedPushes
+        hasRestrictedReviewDismissals
+        hasStrictRequiredStatusChecks
+        isAdminEnforced
+        name
+        requiredStatusCheckContexts
+      }
+      totalCount
+    }
+    repositoryTopics {
+      nodes {
+        topic {
+          name
+        }
+      }
+      totalCount
+    }
+    codeOfConduct {
+      body
+      key
+      name
+    }
+    description
+    hasIssuesEnabled
+    hasWikiEnabled
+    homepageUrl
+    id
+    isArchived
+    isPrivate
+    licenseInfo {
+      nickname
+    }
+    name
+    url
+  }
+}
