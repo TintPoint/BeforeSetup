@@ -4,7 +4,7 @@ import Apollo
 
 public final class RepositoryQuery: GraphQLQuery {
   public static let operationString =
-    "query Repository($name: String!, $owner: String!) {\n  repository(name: $name, owner: $owner) {\n    __typename\n    labels {\n      __typename\n      nodes {\n        __typename\n        color\n        name\n      }\n      totalCount\n    }\n    protectedBranches {\n      __typename\n      nodes {\n        __typename\n        hasDismissableStaleReviews\n        hasRequiredReviews\n        hasRequiredStatusChecks\n        hasRestrictedPushes\n        hasRestrictedReviewDismissals\n        hasStrictRequiredStatusChecks\n        isAdminEnforced\n        name\n        requiredStatusCheckContexts\n      }\n      totalCount\n    }\n    repositoryTopics {\n      __typename\n      nodes {\n        __typename\n        topic {\n          __typename\n          name\n        }\n      }\n      totalCount\n    }\n    codeOfConduct {\n      __typename\n      body\n      key\n      name\n    }\n    description\n    hasIssuesEnabled\n    hasWikiEnabled\n    homepageUrl\n    id\n    isArchived\n    isPrivate\n    licenseInfo {\n      __typename\n      nickname\n    }\n    name\n    url\n  }\n}"
+    "query Repository($name: String!, $owner: String!) {\n  repository(name: $name, owner: $owner) {\n    __typename\n    labels(first: 10) {\n      __typename\n      nodes {\n        __typename\n        color\n        name\n      }\n      totalCount\n    }\n    protectedBranches(first: 10) {\n      __typename\n      nodes {\n        __typename\n        hasDismissableStaleReviews\n        hasRequiredReviews\n        hasRequiredStatusChecks\n        hasRestrictedPushes\n        hasRestrictedReviewDismissals\n        hasStrictRequiredStatusChecks\n        isAdminEnforced\n        name\n        requiredStatusCheckContexts\n      }\n      totalCount\n    }\n    repositoryTopics(first: 10) {\n      __typename\n      nodes {\n        __typename\n        topic {\n          __typename\n          name\n        }\n      }\n      totalCount\n    }\n    codeOfConduct {\n      __typename\n      body\n      key\n      name\n    }\n    description\n    hasIssuesEnabled\n    hasWikiEnabled\n    homepageUrl\n    id\n    isArchived\n    isPrivate\n    licenseInfo {\n      __typename\n      name\n    }\n    name\n    url\n  }\n}"
 
   public var name: String
   public var owner: String
@@ -50,9 +50,9 @@ public final class RepositoryQuery: GraphQLQuery {
 
       public static let selections: [GraphQLSelection] = [
         GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-        GraphQLField("labels", type: .object(Label.selections)),
-        GraphQLField("protectedBranches", type: .nonNull(.object(ProtectedBranch.selections))),
-        GraphQLField("repositoryTopics", type: .nonNull(.object(RepositoryTopic.selections))),
+        GraphQLField("labels", arguments: ["first": 10], type: .object(Label.selections)),
+        GraphQLField("protectedBranches", arguments: ["first": 10], type: .nonNull(.object(ProtectedBranch.selections))),
+        GraphQLField("repositoryTopics", arguments: ["first": 10], type: .nonNull(.object(RepositoryTopic.selections))),
         GraphQLField("codeOfConduct", type: .object(CodeOfConduct.selections)),
         GraphQLField("description", type: .scalar(String.self)),
         GraphQLField("hasIssuesEnabled", type: .nonNull(.scalar(Bool.self))),
@@ -687,7 +687,7 @@ public final class RepositoryQuery: GraphQLQuery {
 
         public static let selections: [GraphQLSelection] = [
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-          GraphQLField("nickname", type: .scalar(String.self)),
+          GraphQLField("name", type: .nonNull(.scalar(String.self))),
         ]
 
         public var snapshot: Snapshot
@@ -696,8 +696,8 @@ public final class RepositoryQuery: GraphQLQuery {
           self.snapshot = snapshot
         }
 
-        public init(nickname: String? = nil) {
-          self.init(snapshot: ["__typename": "License", "nickname": nickname])
+        public init(name: String) {
+          self.init(snapshot: ["__typename": "License", "name": name])
         }
 
         public var __typename: String {
@@ -709,13 +709,13 @@ public final class RepositoryQuery: GraphQLQuery {
           }
         }
 
-        /// Customary short name if applicable (e.g, GPLv3)
-        public var nickname: String? {
+        /// The license full name specified by <https://spdx.org/licenses>
+        public var name: String {
           get {
-            return snapshot["nickname"] as? String
+            return snapshot["name"]! as! String
           }
           set {
-            snapshot.updateValue(newValue, forKey: "nickname")
+            snapshot.updateValue(newValue, forKey: "name")
           }
         }
       }

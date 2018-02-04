@@ -1,13 +1,13 @@
 query Repository($name: String!, $owner: String!) {
   repository(name: $name, owner: $owner) {
-    labels {
+    labels(first: 10) {
       nodes {
         color
         name
       }
       totalCount
     }
-    protectedBranches {
+    protectedBranches(first: 10) {
       nodes {
         hasDismissableStaleReviews
         hasRequiredReviews
@@ -21,7 +21,7 @@ query Repository($name: String!, $owner: String!) {
       }
       totalCount
     }
-    repositoryTopics {
+    repositoryTopics(first: 10) {
       nodes {
         topic {
           name
@@ -42,7 +42,7 @@ query Repository($name: String!, $owner: String!) {
     isArchived
     isPrivate
     licenseInfo {
-      nickname
+      name
     }
     name
     url
