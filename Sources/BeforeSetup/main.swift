@@ -7,33 +7,37 @@ enum NetworkError: Error {
     case graphQLErrors([GraphQLError])
 }
 
-
-
-func check<Element: Equatable & CustomStringConvertible>(_ key: String, if currentValue: Element?, is expectedValue: Element?) {
+func check<Element: Equatable & CustomStringConvertible>(_ key: String, if currentValue: Element?, is expectedValue: Element?) -> Int {
     switch (currentValue, expectedValue) {
-    case (nil, nil):
-        print("\(key): skipped.")
-    case (let currentValue?, let expectedValue?) where currentValue == expectedValue:
-        print("\(key): \(currentValue)")
+    case (let currentValue, let expectedValue) where currentValue == expectedValue:
+        print("☑ \(key): \(currentValue?.description ?? "nil")")
+        return 0
     default:
-        print("Warning: \(key) should be \(expectedValue?.description ?? "nil") but currently is \(currentValue?.description ?? "nil").")
+        print("☒ \(key) should be \(expectedValue?.description ?? "nil") but currently is \(currentValue?.description ?? "nil")")
+        return 1
     }
 }
 
 func validateRepository(_ repository: RepositoryQuery.Data.Repository) {
-    check("number of labels", if: repository.labels?.totalCount ?? 0, is: 5)
-    check("number of protected branches", if: repository.protectedBranches.totalCount, is: 1)
-    check("number of repository topics", if: repository.repositoryTopics.totalCount, is: 6)
-    check("code of conduct", if: repository.codeOfConduct?.name, is: "Contributor Covenant")
-    check("description", if: repository.description, is: "Flexible UI Framework Designed for Swift")
-    check("has issues enabled", if: repository.hasIssuesEnabled, is: true)
-    check("has wiki enabled", if: repository.hasWikiEnabled, is: false)
-    check("homepage url", if: repository.homepageUrl, is: "http://www.tintpoint.com")
-    check("is archived", if: repository.isArchived, is: false)
-    check("is private", if: repository.isPrivate, is: false)
-    check("license", if: repository.licenseInfo?.name, is: "MIT License")
-    check("name", if: repository.name, is: "Overlay")
-    check("url", if: repository.url, is: "https://github.com/TintPoint/Overlay")
+    var errorCount = 0
+    errorCount += check("number of labels", if: repository.labels?.totalCount, is: 5)
+    errorCount += check("number of protected branches", if: repository.protectedBranches.totalCount, is: 1)
+    errorCount += check("number of repository topics", if: repository.repositoryTopics.totalCount, is: 6)
+    errorCount += check("code of conduct", if: repository.codeOfConduct?.name, is: "Contributor Covenant")
+    errorCount += check("description", if: repository.description, is: "Flexible UI Framework Designed for Swift")
+    errorCount += check("has issues enabled", if: repository.hasIssuesEnabled, is: true)
+    errorCount += check("has wiki enabled", if: repository.hasWikiEnabled, is: false)
+    errorCount += check("homepage url", if: repository.homepageUrl, is: "http://www.tintpoint.com")
+    errorCount += check("is archived", if: repository.isArchived, is: false)
+    errorCount += check("is private", if: repository.isPrivate, is: false)
+    errorCount += check("license", if: repository.licenseInfo?.name, is: "MIT License")
+    errorCount += check("name", if: repository.name, is: "Overlay")
+    errorCount += check("url", if: repository.url, is: "https://github.com/TintPoint/Overlay")
+    if errorCount == 0 {
+        print("☑ Congratulations! All tests are passed.")
+    } else {
+        print("☒ You have \(errorCount) errors.")
+    }
 }
 
 do {
