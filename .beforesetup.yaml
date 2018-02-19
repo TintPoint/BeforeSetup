@@ -1,0 +1,42 @@
+labels:
+  - name: bug
+    color: d73a4a
+  - name: enhancement
+    color: a2eeef
+  - name: good first issue
+    color: 7057ff
+  - name: help wanted
+    color: 008672
+  - name: high priority
+    color: e4e669
+protectedBranches:
+  - hasDismissableStaleReviews: true
+    hasRequiredReviews: true
+    hasRequiredStatusChecks: true
+    hasRestrictedPushes: true
+    hasRestrictedReviewDismissals: true
+    hasStrictRequiredStatusChecks: true
+    isAdminEnforced: false
+    name: master
+    requiredStatusCheckContexts: []
+repositoryTopics:
+  - topic:
+      name: github
+  - topic:
+      name: configuration-management
+  - topic:
+      name: swift
+  - topic:
+      name: validation
+codeOfConduct:
+  name: Contributor Covenant
+description: "Validate Your GitHub Repository Settings"
+hasIssuesEnabled: true
+hasWikiEnabled: false
+homepageUrl: "http://www.tintpoint.com"
+isArchived: false
+isPrivate: true
+licenseInfo:
+  name: "MIT License"
+name: "BeforeSetup"
+url: https://github.com/TintPoint/BeforeSetup
