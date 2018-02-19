@@ -10,8 +10,8 @@ We use GitHub as support system, please submit a new issue to ask questions.
 
 When reporting issues, please include the following:
 
-- The version of Xcode you're using
-- The version of iOS you're targeting
+- The version of Swift you're using
+- The version of macOS you're using
 - The full output of any stack trace or compiler error
 - A code snippet that reproduces the described behavior, if applicable
 - Any other details that would be useful in understanding the problem
