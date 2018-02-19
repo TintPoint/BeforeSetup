@@ -35,7 +35,7 @@ hasIssuesEnabled: true
 hasWikiEnabled: false
 homepageUrl: "http://www.tintpoint.com"
 isArchived: false
-isPrivate: true
+isPrivate: false
 licenseInfo:
   name: "MIT License"
 name: "BeforeSetup"

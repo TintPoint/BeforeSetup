@@ -30,8 +30,6 @@ query Repository($name: String!, $owner: String!) {
       totalCount
     }
     codeOfConduct {
-      body
-      key
       name
     }
     description

@@ -4,7 +4,7 @@ import Apollo
 
 public final class RepositoryQuery: GraphQLQuery {
   public static let operationString =
-    "query Repository($name: String!, $owner: String!) {\n  repository(name: $name, owner: $owner) {\n    __typename\n    labels(first: 10) {\n      __typename\n      nodes {\n        __typename\n        color\n        name\n      }\n      totalCount\n    }\n    protectedBranches(first: 10) {\n      __typename\n      nodes {\n        __typename\n        hasDismissableStaleReviews\n        hasRequiredReviews\n        hasRequiredStatusChecks\n        hasRestrictedPushes\n        hasRestrictedReviewDismissals\n        hasStrictRequiredStatusChecks\n        isAdminEnforced\n        name\n        requiredStatusCheckContexts\n      }\n      totalCount\n    }\n    repositoryTopics(first: 10) {\n      __typename\n      nodes {\n        __typename\n        topic {\n          __typename\n          name\n        }\n      }\n      totalCount\n    }\n    codeOfConduct {\n      __typename\n      body\n      key\n      name\n    }\n    description\n    hasIssuesEnabled\n    hasWikiEnabled\n    homepageUrl\n    id\n    isArchived\n    isPrivate\n    licenseInfo {\n      __typename\n      name\n    }\n    name\n    url\n  }\n}"
+    "query Repository($name: String!, $owner: String!) {\n  repository(name: $name, owner: $owner) {\n    __typename\n    labels(first: 10) {\n      __typename\n      nodes {\n        __typename\n        color\n        name\n      }\n      totalCount\n    }\n    protectedBranches(first: 10) {\n      __typename\n      nodes {\n        __typename\n        hasDismissableStaleReviews\n        hasRequiredReviews\n        hasRequiredStatusChecks\n        hasRestrictedPushes\n        hasRestrictedReviewDismissals\n        hasStrictRequiredStatusChecks\n        isAdminEnforced\n        name\n        requiredStatusCheckContexts\n      }\n      totalCount\n    }\n    repositoryTopics(first: 10) {\n      __typename\n      nodes {\n        __typename\n        topic {\n          __typename\n          name\n        }\n      }\n      totalCount\n    }\n    codeOfConduct {\n      __typename\n      name\n    }\n    description\n    hasIssuesEnabled\n    hasWikiEnabled\n    homepageUrl\n    id\n    isArchived\n    isPrivate\n    licenseInfo {\n      __typename\n      name\n    }\n    name\n    url\n  }\n}"
 
   public var name: String
   public var owner: String
@@ -627,8 +627,6 @@ public final class RepositoryQuery: GraphQLQuery {
 
         public static let selections: [GraphQLSelection] = [
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-          GraphQLField("body", type: .scalar(String.self)),
-          GraphQLField("key", type: .nonNull(.scalar(String.self))),
           GraphQLField("name", type: .nonNull(.scalar(String.self))),
         ]
 
@@ -638,8 +636,8 @@ public final class RepositoryQuery: GraphQLQuery {
           self.snapshot = snapshot
         }
 
-        public init(body: String? = nil, key: String, name: String) {
-          self.init(snapshot: ["__typename": "CodeOfConduct", "body": body, "key": key, "name": name])
+        public init(name: String) {
+          self.init(snapshot: ["__typename": "CodeOfConduct", "name": name])
         }
 
         public var __typename: String {
@@ -648,26 +646,6 @@ public final class RepositoryQuery: GraphQLQuery {
           }
           set {
             snapshot.updateValue(newValue, forKey: "__typename")
-          }
-        }
-
-        /// The body of the CoC
-        public var body: String? {
-          get {
-            return snapshot["body"] as? String
-          }
-          set {
-            snapshot.updateValue(newValue, forKey: "body")
-          }
-        }
-
-        /// The key for the CoC
-        public var key: String {
-          get {
-            return snapshot["key"]! as! String
-          }
-          set {
-            snapshot.updateValue(newValue, forKey: "key")
           }
         }
 
