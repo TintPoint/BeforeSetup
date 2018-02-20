@@ -9,8 +9,23 @@ class Checker {
         self.currentRepository = currentRepository
         self.expectedRepository = expectedRepository
     }
-    
-    private func checkMismatch(of label: String, expect currentValue: AnyHashable?, equals expectedValue: AnyHashable, outputIndentation numberOfSpaces: Int) {
+
+    func validate() {
+        mismatchCount = 0
+        // Special case: sort labels by name (currently GitHub doesn't provide sorting API for labels)
+        currentRepository.labels?.nodes?.sort { first, second in
+            return (first?.name ?? "") < (second?.name ?? "")
+        }
+        expect(currentRepository.jsonObject, equals: Mirror(reflecting: expectedRepository), recursiveLevel: 0)
+        switch mismatchCount {
+        case 0: Terminal.output("Congratulations! All tests are passed.", color: .green)
+        default: Terminal.output("You have \(mismatchCount) mismatch(es).", color: .red)
+        }
+    }
+}
+
+private extension Checker {
+    func checkMismatch(of label: String, expect currentValue: AnyHashable?, equals expectedValue: AnyHashable, outputIndentation numberOfSpaces: Int) {
         let indentation = String(repeating: " ", count: numberOfSpaces)
         if currentValue == expectedValue {
             Terminal.output("\(indentation)☑ \(label): \"\(expectedValue)\"")
@@ -20,7 +35,7 @@ class Checker {
         }
     }
     
-    private func checkMismatch(of label: String, expect currentValue: [AnyHashable]?, equals expectedValue: [AnyHashable], outputIndentation numberOfSpaces: Int) {
+    func checkMismatch(of label: String, expect currentValue: [AnyHashable]?, equals expectedValue: [AnyHashable], outputIndentation numberOfSpaces: Int) {
         let indentation = String(repeating: " ", count: numberOfSpaces)
         if expectedValue.count == currentValue?.count && zip(expectedValue, currentValue ?? []).reduce(true, { $0 && $1.0 == $1.1 }) {
             Terminal.output("\(indentation)☑ \(label): \"\(expectedValue.map(String.init))\"")
@@ -30,7 +45,7 @@ class Checker {
         }
     }
     
-    private func checkCountMismatch(of label: String, expect currentCount: Int, equals expectedCount: Int, outputIndentation numberOfSpaces: Int) {
+    func checkCountMismatch(of label: String, expect currentCount: Int, equals expectedCount: Int, outputIndentation numberOfSpaces: Int) {
         let indentation = String(repeating: " ", count: numberOfSpaces)
         if currentCount == expectedCount {
             Terminal.output("\(indentation)☑ \(label) (\(expectedCount) item(s)):")
@@ -40,7 +55,7 @@ class Checker {
         }
     }
     
-    private func expect(_ current: JSONObject, equals expected: Mirror, recursiveLevel: Int) {
+    func expect(_ current: JSONObject, equals expected: Mirror, recursiveLevel: Int) {
         let numberOfSpaces = recursiveLevel * 2
         for case (let label?, Optional<Any>.some(let value)) in expected.children {
             switch (value, current[label]) {
@@ -63,19 +78,6 @@ class Checker {
                 let currentValue = String(describing: currentValue)
                 checkMismatch(of: label, expect: currentValue, equals: expectedValue, outputIndentation: numberOfSpaces)
             }
-        }
-    }
-    
-    func validate() {
-        mismatchCount = 0
-        // Special case: sort labels by name (currently GitHub doesn't provide sorting API for labels)
-        currentRepository.labels?.nodes?.sort { first, second in
-            return (first?.name ?? "") < (second?.name ?? "")
-        }
-        expect(currentRepository.jsonObject, equals: Mirror(reflecting: expectedRepository), recursiveLevel: 0)
-        switch mismatchCount {
-        case 0: Terminal.output("Congratulations! All tests are passed.", color: .green)
-        default: Terminal.output("You have \(mismatchCount) mismatch(es).", color: .red)
         }
     }
 }

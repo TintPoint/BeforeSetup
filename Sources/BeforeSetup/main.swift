@@ -1,6 +1,8 @@
 import Foundation
 import Apollo
 
+let beforeSetupVersion = "0.1"
+
 class BeforeSetup {
     private let configuration: URLSessionConfiguration
     private let client: ApolloClient
@@ -15,7 +17,7 @@ class BeforeSetup {
     }
 
     func checkRepository(name: String, owner: String, configurations: Configurations) {
-        Terminal.output("\(name)/\(owner)")
+        Terminal.output("\(owner)/\(name)", color: .green)
         let query = RepositoryQuery(name: name, owner: owner)
         let group = DispatchGroup()
         client.fetch(query: query, queue: .global(qos: .userInitiated)) { result, error in

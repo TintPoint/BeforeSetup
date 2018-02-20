@@ -1,17 +1,5 @@
 import Foundation
 
-struct StandardOutputStream: TextOutputStream {
-    func write(_ string: String) {
-        FileHandle.standardOutput.write(Data(string.utf8))
-    }
-}
-
-struct StandardErrorStream: TextOutputStream {
-    func write(_ string: String) {
-        FileHandle.standardError.write(Data(string.utf8))
-    }
-}
-
 enum Terminal {
     enum OutputStream {
         case standardOutput, standardError
@@ -29,7 +17,7 @@ enum Terminal {
             }
         }
     }
-
+    
     static func output(_ string: String, to outputStream: OutputStream = .standardOutput, color outputColor: OutputColor = .default) {
         let string = outputColor.converted(string)
         switch outputStream {
@@ -45,5 +33,19 @@ enum Terminal {
     static func githubToken() throws -> String {
         guard let token = ProcessInfo.processInfo.environment["BEFORE_SETUP_TOKEN"] else { throw GeneralError.missingToken }
         return token
+    }
+}
+
+private extension Terminal {
+    struct StandardOutputStream: TextOutputStream {
+        func write(_ string: String) {
+            FileHandle.standardOutput.write(Data(string.utf8))
+        }
+    }
+    
+    struct StandardErrorStream: TextOutputStream {
+        func write(_ string: String) {
+            FileHandle.standardError.write(Data(string.utf8))
+        }
     }
 }

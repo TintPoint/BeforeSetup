@@ -3,7 +3,7 @@ import Yams
 
 protocol AcceptableNonliteral { }
 
-class Configurations {
+struct Configurations {
     struct Repository: Codable {
         var labels: [Label]?
         var protectedBranches: [ProtectedBranch]?
