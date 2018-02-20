@@ -8,11 +8,12 @@ Swift 4+
 
 ## Getting Started
 
+For configurations file example, please checkout `.beforesetup.yaml`.
+
 ```bash
 > git clone https://github.com/TintPoint/BeforeSetup.git
 > cd BeforeSetup
-> swift build
-> swift run
+> bin/BeforeSetup --help
 ```
 
 ## Development
@@ -25,11 +26,4 @@ Make sure you have the latest version of [Xcode](https://developer.apple.com/xco
 > yarn global add apollo-codegen
 > apollo-codegen introspect-schema "https://api.github.com/graphql" --header "Authorization: Bearer <token>"
 > apollo-codegen generate **.graphql --output "Sources/BeforeSetup/GraphQL/API.swift"
-```
-
-### Release Command Line Tool
-
-```bash
-> swift build -c release -Xswiftc -static-stdlib
-> cp -f .build/release/beforesetup /usr/local/bin/beforesetup
 ```
