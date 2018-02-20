@@ -16,13 +16,13 @@ class Configurations {
         var isArchived: Bool?
         var isPrivate: Bool?
         var licenseInfo: LicenseInfo?
-        var name: String
+        var name: String?
         var url: String?
     }
 
     struct Label: Codable, AcceptableNonliteral {
         var color: String?
-        var name: String
+        var name: String?
     }
 
     struct ProtectedBranch: Codable, AcceptableNonliteral {
@@ -33,24 +33,24 @@ class Configurations {
         var hasRestrictedReviewDismissals: Bool?
         var hasStrictRequiredStatusChecks: Bool?
         var isAdminEnforced: Bool?
-        var name: String
+        var name: String?
         var requiredStatusCheckContexts: [String]?
     }
 
     struct RepositoryTopic: Codable, AcceptableNonliteral {
-        var topic: Topic
+        var topic: Topic?
     }
 
     struct Topic: Codable, AcceptableNonliteral {
-        var name: String
+        var name: String?
     }
 
     struct CodeOfConduct: Codable, AcceptableNonliteral {
-        var name: String
+        var name: String?
     }
 
     struct LicenseInfo: Codable, AcceptableNonliteral {
-        var name: String
+        var name: String?
     }
 
     let repository: Repository
