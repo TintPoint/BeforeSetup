@@ -2,10 +2,6 @@
 
 **Note**: BeforeSetup is still under development and many things are subject to change.
 
-## Requirements
-
-Swift 4+
-
 ## Getting Started
 
 For configurations file example, please checkout `.beforesetup.yaml`.
@@ -17,6 +13,10 @@ For configurations file example, please checkout `.beforesetup.yaml`.
 ```
 
 ## Development
+
+### Requirements
+
+Swift 4+
 
 ### Setup Dependencies
 
