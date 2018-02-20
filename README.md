@@ -9,7 +9,7 @@ For configurations file example, please checkout `.beforesetup.yaml`.
 ```bash
 > git clone https://github.com/TintPoint/BeforeSetup.git
 > cd BeforeSetup
-> bin/BeforeSetup --help
+> bin/beforesetup --help
 ```
 
 ## Development
