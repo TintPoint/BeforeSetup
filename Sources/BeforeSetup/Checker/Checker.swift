@@ -15,7 +15,7 @@ class Checker {
         if currentValue == expectedValue {
             Terminal.output("\(indentation)☑ \(label): \"\(expectedValue)\"")
         } else {
-            Terminal.output("\(indentation)☒ \(label): should be \"\(expectedValue)\" but currently is \"\(currentValue?.description ?? "nil")\"")
+            Terminal.output("\(indentation)☒ \(label): should be \"\(expectedValue)\" but currently is \"\(currentValue?.description ?? "nil")\"", color: .yellow)
             mismatchCount += 1
         }
     }
@@ -25,7 +25,7 @@ class Checker {
         if expectedValue.count == currentValue?.count && zip(expectedValue, currentValue ?? []).reduce(true, { $0 && $1.0 == $1.1 }) {
             Terminal.output("\(indentation)☑ \(label): \"\(expectedValue.map(String.init))\"")
         } else {
-            Terminal.output("\(indentation)☒ \(label): should be \"\(expectedValue.map(String.init))\" but currently is \"\(currentValue?.map(String.init) ?? ["nil"])\"")
+            Terminal.output("\(indentation)☒ \(label): should be \"\(expectedValue.map(String.init))\" but currently is \"\(currentValue?.map(String.init) ?? ["nil"])\"", color: .yellow)
             mismatchCount += 1
         }
     }
@@ -35,7 +35,7 @@ class Checker {
         if currentCount == expectedCount {
             Terminal.output("\(indentation)☑ \(label) (\(expectedCount) item(s)):")
         } else {
-            Terminal.output("\(indentation)☒ \(label): should have \(expectedCount) item(s) but currently has \(currentCount) item(s)")
+            Terminal.output("\(indentation)☒ \(label): should have \(expectedCount) item(s) but currently has \(currentCount) item(s)", color: .yellow)
             mismatchCount += 1
         }
     }
@@ -74,8 +74,8 @@ class Checker {
         }
         expect(currentRepository.jsonObject, equals: Mirror(reflecting: expectedRepository), recursiveLevel: 0)
         switch mismatchCount {
-        case 0: Terminal.output("Congratulations! All tests are passed.")
-        default: Terminal.output("You have \(mismatchCount) mismatch(es).")
+        case 0: Terminal.output("Congratulations! All tests are passed.", color: .green)
+        default: Terminal.output("You have \(mismatchCount) mismatch(es).", color: .red)
         }
     }
 }

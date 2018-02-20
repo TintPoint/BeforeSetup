@@ -15,6 +15,7 @@ class BeforeSetup {
     }
 
     func checkRepository(name: String, owner: String, configurations: Configurations) {
+        Terminal.output("\(name)/\(owner)")
         let query = RepositoryQuery(name: name, owner: owner)
         let group = DispatchGroup()
         client.fetch(query: query, queue: .global(qos: .userInitiated)) { result, error in
@@ -26,7 +27,7 @@ class BeforeSetup {
                 guard let data = result.data, let repository = data.repository else { throw NetworkError.emptyQueryResult }
                 Checker(expect: repository, equals: configurations.repository).validate()
             } catch {
-                Terminal.output(error.localizedDescription, to: .standardError)
+                Terminal.output(error.localizedDescription, to: .standardError, color: .red)
             }
         }
         group.enter()
@@ -35,12 +36,11 @@ class BeforeSetup {
 }
 
 do {
-    guard let token = ProcessInfo.processInfo.environment["BEFORE_SETUP_TOKEN"] else { throw GeneralError.missingToken }
+    let token = try Terminal.githubToken()
     let configurationsURLString = ".beforesetup.yaml"
     let configurations = try Configurations(fileURL: URL(fileURLWithPath: configurationsURLString))
     let beforeSetup = try BeforeSetup(token: token)
     beforeSetup.checkRepository(name: "BeforeSetup", owner: "TintPoint", configurations: configurations)
-    beforeSetup.checkRepository(name: "Overlay", owner: "TintPoint", configurations: configurations)
 } catch {
-    Terminal.output(error.localizedDescription, to: .standardError)
+    Terminal.output(error.localizedDescription, to: .standardError, color: .red)
 }

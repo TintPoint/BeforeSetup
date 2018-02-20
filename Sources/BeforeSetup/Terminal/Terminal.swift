@@ -16,8 +16,22 @@ enum Terminal {
     enum OutputStream {
         case standardOutput, standardError
     }
+    
+    enum OutputColor {
+        case `default`, red, green, yellow
+        
+        fileprivate func converted(_ string: String) -> String {
+            switch self {
+            case .`default`: return "\u{001B}[39m\(string)"
+            case .red: return "\u{001B}[31m\(string)\u{001B}[0m"
+            case .green: return "\u{001B}[32m\(string)\u{001B}[0m"
+            case .yellow: return "\u{001B}[33m\(string)\u{001B}[0m"
+            }
+        }
+    }
 
-    static func output(_ string: String, to outputStream: OutputStream = .standardOutput) {
+    static func output(_ string: String, to outputStream: OutputStream = .standardOutput, color outputColor: OutputColor = .default) {
+        let string = outputColor.converted(string)
         switch outputStream {
         case .standardOutput:
             var standardOutput = StandardOutputStream()
@@ -26,5 +40,10 @@ enum Terminal {
             var standardError = StandardErrorStream()
             print(string, to: &standardError)
         }
+    }
+    
+    static func githubToken() throws -> String {
+        guard let token = ProcessInfo.processInfo.environment["BEFORE_SETUP_TOKEN"] else { throw GeneralError.missingToken }
+        return token
     }
 }
