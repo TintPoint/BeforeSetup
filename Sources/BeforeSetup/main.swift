@@ -28,7 +28,7 @@ class BeforeSetup {
     private let configuration: URLSessionConfiguration
     private let client: ApolloClient
     private let urlString: String
-    
+
     init(token: String) throws {
         configuration = .default
         configuration.httpAdditionalHeaders = ["Authorization": "Bearer \(token)"]
@@ -36,7 +36,7 @@ class BeforeSetup {
         guard let url = URL(string: urlString) else { throw NetworkError.invalidBaseURLString(urlString) }
         client = ApolloClient(networkTransport: HTTPNetworkTransport(url: url, configuration: configuration))
     }
-    
+
     func checkRepository(name: String, owner: String, configurations: Configurations) {
         let query = RepositoryQuery(name: name, owner: owner)
         let group = DispatchGroup()
@@ -66,7 +66,7 @@ class Checker {
     private var currentRepository: RepositoryQuery.Data.Repository
     private let expectedRepository: Configurations.Repository
     private(set) var mismatchCount: Int = 0
-    
+
     init(expect currentRepository: RepositoryQuery.Data.Repository, equals expectedRepository: Configurations.Repository) {
         self.currentRepository = currentRepository
         self.expectedRepository = expectedRepository
@@ -81,7 +81,7 @@ class Checker {
             mismatchCount += 1
         }
     }
-    
+
     private func checkMismatch(of label: String, expect currentValue: [AnyHashable]?, equals expectedValue: [AnyHashable], outputIndentation numberOfSpaces: Int) {
         let indentation = String(repeating: " ", count: numberOfSpaces)
         if expectedValue.count == currentValue?.count && zip(expectedValue, currentValue ?? []).reduce(true, { $0 && $1.0 == $1.1 }) {
@@ -91,7 +91,7 @@ class Checker {
             mismatchCount += 1
         }
     }
-    
+
     private func checkCountMismatch(of label: String, expect currentCount: Int, equals expectedCount: Int, outputIndentation numberOfSpaces: Int) {
         let indentation = String(repeating: " ", count: numberOfSpaces)
         if currentCount == expectedCount {
@@ -101,12 +101,11 @@ class Checker {
             mismatchCount += 1
         }
     }
-    
+
     private func expect(_ current: JSONObject, equals expected: Mirror, recursiveLevel: Int) {
         let numberOfSpaces = recursiveLevel * 2
-        for property in expected.children {
-            guard let label = property.label else { continue }
-            switch (property.value, current[label]) {
+        for case (let label?, Optional<Any>.some(let value)) in expected.children {
+            switch (value, current[label]) {
             case let (expectedValues, currentValues) as ([AcceptableNonliteral], JSONObject):
                 let currentValues = currentValues["nodes"] as? [JSONObject] ?? []
                 checkCountMismatch(of: label, expect: currentValues.count, equals: expectedValues.count, outputIndentation: numberOfSpaces)
@@ -128,7 +127,7 @@ class Checker {
             }
         }
     }
-    
+
     func validate() {
         mismatchCount = 0
         // Special case: sort labels by name (currently GitHub doesn't provide sorting API for labels)
