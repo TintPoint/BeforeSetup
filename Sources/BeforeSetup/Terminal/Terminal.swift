@@ -1,6 +1,38 @@
 import Foundation
 
-enum Terminal {
+class Terminal {
+    let environment: [String: String]
+    let userInputArguments: [String]
+    let supportedArguments: Arguments.Supported
+    let processedArguments: Arguments.Processed
+
+    init(processInfo: ProcessInfo) {
+        environment = processInfo.environment
+        userInputArguments = processInfo.arguments
+        supportedArguments = Arguments.Supported()
+        processedArguments = Arguments.Processed()
+    }
+    
+    func processArguments() throws {
+        for case let (label?, value) in Mirror(reflecting: supportedArguments).children {
+            if let index = userInputArguments.index(of: "--\(label.lowercased())") {
+                let argument = userInputArguments[index]
+                switch value {
+                case let function as () -> Void:
+                    function()
+                case let function as (Any, Any) throws -> Void where userInputArguments.indices.contains(index + 1):
+                    try function(processedArguments, userInputArguments[index + 1])
+                case _ as (Any, Any) throws -> Void:
+                    throw GeneralError.argumentExpectsOneMoreParameter(argument)
+                default:
+                    throw GeneralError.processArgumentInternalError
+                }
+            }
+        }
+    }
+}
+
+extension Terminal {
     enum OutputStream {
         case standardOutput, standardError
     }
@@ -28,11 +60,6 @@ enum Terminal {
             var standardError = StandardErrorStream()
             print(string, to: &standardError)
         }
-    }
-    
-    static func githubToken() throws -> String {
-        guard let token = ProcessInfo.processInfo.environment["BEFORE_SETUP_TOKEN"] else { throw GeneralError.missingToken }
-        return token
     }
 }
 

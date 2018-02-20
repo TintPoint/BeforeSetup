@@ -38,11 +38,15 @@ class BeforeSetup {
 }
 
 do {
-    let token = try Terminal.githubToken()
-    let configurationsURLString = ".beforesetup.yaml"
-    let configurations = try Configurations(fileURL: URL(fileURLWithPath: configurationsURLString))
+    
+    let terminal = Terminal(processInfo: .processInfo)
+    try terminal.processArguments()
+    let token = try terminal.githubToken()
+    let name = try terminal.repositoryName()
+    let owner = try terminal.repositoryOwner()
+    let configurations = try Configurations(fileURL: URL(fileURLWithPath: terminal.configurationsURLString()))
     let beforeSetup = try BeforeSetup(token: token)
-    beforeSetup.checkRepository(name: "BeforeSetup", owner: "TintPoint", configurations: configurations)
+    beforeSetup.checkRepository(name: name, owner: owner, configurations: configurations)
 } catch {
     Terminal.output(error.localizedDescription, to: .standardError, color: .red)
 }
