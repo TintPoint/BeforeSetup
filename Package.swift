@@ -12,6 +12,7 @@ let package = Package(
     targets: [
         .target(
             name: "BeforeSetup",
-            dependencies: ["Apollo", "Yams"]),
+            dependencies: ["Apollo", "Yams"]
+        )
     ]
 )
