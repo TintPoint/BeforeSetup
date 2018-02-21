@@ -1,10 +1,45 @@
 import Foundation
 
-enum Arguments {
-    // Order of instance variables reflects the order of processing arguments
-    class Supported {
-        let help = {
-            Terminal.output("""
+class ProcessedArguments {
+    fileprivate(set) var githubToken: String?
+    fileprivate(set) var repositoryOwner: String?
+    fileprivate(set) var repositoryName: String?
+    fileprivate(set) var configurationsURL: URL = URL(fileURLWithPath: ".beforesetup.yaml")
+}
+
+class SupportedArguments {
+    static let withUserInput = WithUserInput()
+    static let withoutUserInput = WithoutUserInput()
+
+    // Use global variables to workaround Swift's readwrite reflection limitation
+    static var processedArguments: ProcessedArguments!
+    static var nextArgument: String!
+    
+    class WithUserInput {
+        fileprivate init() { }
+        
+        private let token: () throws -> Void = {
+            processedArguments.githubToken = nextArgument
+        }
+        
+        private let repo: () throws -> Void = {
+            let tokens = nextArgument.split(separator: "/").map(String.init)
+            guard tokens.count == 2 else { throw GeneralError.invalidInput(nextArgument) }
+            processedArguments.repositoryOwner = tokens[0]
+            processedArguments.repositoryName = tokens[1]
+        }
+        
+        private let config: () throws -> Void = {
+            processedArguments.configurationsURL = URL(fileURLWithPath: nextArgument)
+        }
+    }
+    
+    class WithoutUserInput {
+        fileprivate init() { }
+        
+        private let help: () throws -> Void = {
+            Terminal.output(
+                """
                 
                 BeforeSetup, version \(beforeSetupVersion)
                 Copyright © 2018 TintPoint. MIT license.
@@ -13,73 +48,28 @@ enum Arguments {
                 --version                 print currently installed BeforeSetup version
                 --token <GitHubToken>     pass in a valid GitHub token
                 --repo <Owner>/<Name>     pass in the owner and name of the repository
-                --config <FilePath>       pass in the path to the config file, default is "./.beforesetup.yaml"
+                --config <FilePath>       pass in the path to the config file, default is ".beforesetup.yaml"
                 
                 If some arguments aren't provided, BeforeSetup will fallback to use environment variables.
                 
                 BEFORE_SETUP_TOKEN        specific a valid GitHub token
-                BEFORE_SETUP_REPO_NAME    specific the name of the repository
-                BEFORE_SETUP_REPO_OWNER   specific the owner of the repository
-                BEFORE_SETUP_CONFIG_PATH  specific the path to the config file, default is "./.beforesetup.yaml"
+                BEFORE_SETUP_REPO         specific the owner and name of the repository
+                BEFORE_SETUP_CONFIG       specific the path to the config file, default is ".beforesetup.yaml"
                 
-                """)
+                """
+            )
             exit(0)
         }
         
-        let version = {
-            Terminal.output("""
+        private let version: () throws -> Void = {
+            Terminal.output(
+                """
                 
                 BeforeSetup, version \(beforeSetupVersion)
                 
-                """)
+                """
+            )
             exit(0)
         }
-        
-        let token: (Any, Any) throws -> Void = { processed, string in
-            guard let processed = processed as? Processed else { throw GeneralError.processArgumentInternalError }
-            guard let string = string as? String else { throw GeneralError.processArgumentInternalError }
-            processed.githubToken = string
-        }
-        
-        let repo: (Any, Any) throws -> Void = { processed, string in
-            guard let processed = processed as? Processed else { throw GeneralError.processArgumentInternalError }
-            guard let string = string as? String else { throw GeneralError.processArgumentInternalError }
-            let tokens = string.split(separator: "/").map(String.init)
-            guard tokens.count == 2 else { throw GeneralError.invalidInput(string) }
-            processed.repository = (name: tokens[1], owner: tokens[0])
-        }
-        
-        let config: (Any, Any) throws -> Void = { processed, string in
-            guard let processed = processed as? Processed else { throw GeneralError.processArgumentInternalError }
-            guard let string = string as? String else { throw GeneralError.processArgumentInternalError }
-            processed.configurationsURLString = string
-        }
-    }
-    
-    class Processed {
-        var githubToken: String?
-        var repository: (name: String, owner: String)?
-        var configurationsURLString: String?
-    }
-}
-
-extension Terminal {
-    func githubToken() throws -> String {
-        guard let token = processedArguments.githubToken ?? environment["BEFORE_SETUP_TOKEN"] else { throw GeneralError.missingToken }
-        return token
-    }
-    
-    func repositoryName() throws -> String {
-        guard let name = processedArguments.repository?.name ?? environment["BEFORE_SETUP_REPO_NAME"] else { throw GeneralError.missingRepositoryName }
-        return name
-    }
-    
-    func repositoryOwner() throws -> String {
-        guard let owner = processedArguments.repository?.owner ?? environment["BEFORE_SETUP_REPO_OWNER"] else { throw GeneralError.missingRepositoryOwner }
-        return owner
-    }
-    
-    func configurationsURLString() -> String {
-        return processedArguments.configurationsURLString ?? environment["BEFORE_SETUP_CONFIG_PATH"] ?? ".beforesetup.yaml"
     }
 }

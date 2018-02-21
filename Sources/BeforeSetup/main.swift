@@ -38,14 +38,12 @@ class BeforeSetup {
 }
 
 do {
-    
-    let terminal = Terminal(processInfo: .processInfo)
-    try terminal.processArguments()
-    let token = try terminal.githubToken()
-    let name = try terminal.repositoryName()
-    let owner = try terminal.repositoryOwner()
-    let configurations = try Configurations(fileURL: URL(fileURLWithPath: terminal.configurationsURLString()))
+    let arguments = try Terminal(processInfo: .processInfo).arguments
+    guard let token = arguments.githubToken else { throw GeneralError.missingToken }
     let beforeSetup = try BeforeSetup(token: token)
+    let configurations = try Configurations(fileURL: arguments.configurationsURL)
+    guard let owner = arguments.repositoryOwner else { throw GeneralError.missingRepositoryOwner }
+    guard let name = arguments.repositoryName else { throw GeneralError.missingRepositoryName }
     beforeSetup.checkRepository(name: name, owner: owner, configurations: configurations)
 } catch {
     Terminal.output(error.localizedDescription, to: .standardError, color: .red)
