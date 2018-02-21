@@ -59,6 +59,55 @@ Then you can run just type:
 > beforesetup --token <GitHubToken> --repo <Owner>/<Name> --config <FilePath>
 ```
 
+The output will looks like this:
+
+```
+TintPoint/BeforeSetup
+☑ labels (5 item(s)):
+  ☑ color: "d73a4a"
+  ☑ name: "bug"
+  ☑ color: "a2eeef"
+  ☑ name: "enhancement"
+  ☑ color: "7057ff"
+  ☑ name: "good first issue"
+  ☑ color: "008672"
+  ☑ name: "help wanted"
+  ☑ color: "e4e669"
+  ☑ name: "high priority"
+☑ protectedBranches (1 item(s)):
+  ☑ hasDismissableStaleReviews: "true"
+  ☑ hasRequiredReviews: "true"
+  ☑ hasRequiredStatusChecks: "true"
+  ☑ hasRestrictedPushes: "true"
+  ☑ hasRestrictedReviewDismissals: "true"
+  ☑ hasStrictRequiredStatusChecks: "true"
+  ☑ isAdminEnforced: "false"
+  ☑ name: "master"
+  ☑ requiredStatusCheckContexts: "[]"
+☑ repositoryTopics (4 item(s)):
+  ☑ topic (1 item(s)):
+    ☑ name: "github"
+  ☑ topic (1 item(s)):
+    ☑ name: "configuration-management"
+  ☑ topic (1 item(s)):
+    ☑ name: "swift"
+  ☑ topic (1 item(s)):
+    ☑ name: "validation"
+☑ codeOfConduct (1 item(s)):
+  ☑ name: "Contributor Covenant"
+☑ description: "Validate Your GitHub Repository Settings"
+☑ hasIssuesEnabled: "true"
+☑ hasWikiEnabled: "false"
+☑ homepageUrl: "http://www.tintpoint.com"
+☑ isArchived: "false"
+☑ isPrivate: "false"
+☑ licenseInfo (1 item(s)):
+  ☑ name: "MIT License"
+☑ name: "BeforeSetup"
+☑ url: "https://github.com/TintPoint/BeforeSetup"
+Congratulations! All tests are passed.
+```
+
 If you have any question, just type:
 
 ```bash
