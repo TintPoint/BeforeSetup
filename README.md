@@ -10,7 +10,7 @@ macOS
 
 ### Installation
 
-You can use `BeforeSetup` as a command line tool that you run manually, or as part of some other toolchain. Currently you have to install `BeforeSetup` manually. You can download the binary file here, and copy it to `/usr/local/bin/`.
+You can use `BeforeSetup` as a command line tool that you run manually, or as part of some other toolchain. Currently you have to install `BeforeSetup` manually. You can download the binary file [here](https://github.com/TintPoint/BeforeSetup/releases/download/0.1/beforesetup), and copy it to `/usr/local/bin/`.
 
 ### Usage
 
