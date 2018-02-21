@@ -30,13 +30,13 @@ repositoryTopics:
       name: validation
 codeOfConduct:
   name: Contributor Covenant
-description: "Validate Your GitHub Repository Settings"
+description: Validate Your GitHub Repository Settings
 hasIssuesEnabled: true
 hasWikiEnabled: false
-homepageUrl: "http://www.tintpoint.com"
+homepageUrl: http://www.tintpoint.com
 isArchived: false
 isPrivate: false
 licenseInfo:
-  name: "MIT License"
-name: "BeforeSetup"
+  name: MIT License
+name: BeforeSetup
 url: https://github.com/TintPoint/BeforeSetup
