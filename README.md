@@ -59,7 +59,7 @@ Then you can run just type:
 > beforesetup --token <GitHubToken> --repo <Owner>/<Name> --config <FilePath>
 ```
 
-The output will looks like this:
+The output will look like this:
 
 ```
 TintPoint/BeforeSetup
