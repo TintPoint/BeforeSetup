@@ -25,33 +25,48 @@ class Checker {
 }
 
 private extension Checker {
-    func checkMismatch(of label: String, expect currentValue: AnyHashable?, equals expectedValue: AnyHashable, outputIndentation numberOfSpaces: Int) {
-        let indentation = String(repeating: " ", count: numberOfSpaces)
-        if currentValue == expectedValue {
-            Terminal.output("\(indentation)☑ \(label): \"\(expectedValue)\"")
-        } else {
-            Terminal.output("\(indentation)☒ \(label): should be \"\(expectedValue)\" but currently is \"\(currentValue?.description ?? "nil")\"", color: .yellow)
+    func check(label: String, outputIfMatch: String, outputIfMismatch: String, outputIndentation numberOfSpaces: Int, using closure: () -> Bool) {
+        let isMatch = closure()
+        let text = isMatch ? outputIfMatch : outputIfMismatch
+        Terminal.output(indentation: numberOfSpaces, isMatch: isMatch, label: label, text: text)
+        if !isMatch {
             mismatchCount += 1
         }
     }
     
-    func checkMismatch(of label: String, expect currentValue: [AnyHashable]?, equals expectedValue: [AnyHashable], outputIndentation numberOfSpaces: Int) {
-        let indentation = String(repeating: " ", count: numberOfSpaces)
-        if expectedValue.count == currentValue?.count && zip(expectedValue, currentValue ?? []).reduce(true, { $0 && $1.0 == $1.1 }) {
-            Terminal.output("\(indentation)☑ \(label): \"\(expectedValue.map(String.init))\"")
-        } else {
-            Terminal.output("\(indentation)☒ \(label): should be \"\(expectedValue.map(String.init))\" but currently is \"\(currentValue?.map(String.init) ?? ["nil"])\"", color: .yellow)
-            mismatchCount += 1
+    func check(_ label: String, expect currentValue: AnyHashable?, equals expectedValue: AnyHashable, outputIndentation numberOfSpaces: Int) {
+        let matchOutput = """
+        "\(expectedValue)"
+        """
+        let mismatchOutput = """
+        should be "\(expectedValue)" but currently is "\(currentValue?.description ?? "nil")"
+        """
+        check(label: label, outputIfMatch: matchOutput, outputIfMismatch: mismatchOutput, outputIndentation: numberOfSpaces) {
+            currentValue == expectedValue
         }
     }
     
-    func checkCountMismatch(of label: String, expect currentCount: Int, equals expectedCount: Int, outputIndentation numberOfSpaces: Int) {
-        let indentation = String(repeating: " ", count: numberOfSpaces)
-        if currentCount == expectedCount {
-            Terminal.output("\(indentation)☑ \(label) (\(expectedCount) item(s)):")
-        } else {
-            Terminal.output("\(indentation)☒ \(label): should have \(expectedCount) item(s) but currently has \(currentCount) item(s)", color: .yellow)
-            mismatchCount += 1
+    func check(_ label: String, expect currentValue: [AnyHashable]?, equals expectedValue: [AnyHashable], outputIndentation numberOfSpaces: Int) {
+        let matchOutput = """
+        "\(expectedValue)"
+        """
+        let mismatchOutput = """
+        should be "\(expectedValue)" but currently is "\(currentValue ?? [])"
+        """
+        check(label: label, outputIfMatch: matchOutput, outputIfMismatch: mismatchOutput, outputIndentation: numberOfSpaces) {
+            expectedValue.count == currentValue?.count && zip(expectedValue, currentValue ?? []).reduce(true, { $0 && $1.0 == $1.1 })
+        }
+    }
+    
+    func check(_ label: String, expect currentCount: Int, equals expectedCount: Int, outputIndentation numberOfSpaces: Int) {
+        let matchOutput = """
+        \(expectedCount) item(s)
+        """
+        let mismatchOutput = """
+        should have \(expectedCount) item(s) but currently has \(currentCount) item(s)
+        """
+        check(label: label, outputIfMatch: matchOutput, outputIfMismatch: mismatchOutput, outputIndentation: numberOfSpaces) {
+            currentCount == expectedCount
         }
     }
     
@@ -61,23 +76,31 @@ private extension Checker {
             switch (value, current[label]) {
             case let (expectedValues, currentValues) as ([AcceptableNonliteral], JSONObject):
                 let currentValues = currentValues["nodes"] as? [JSONObject] ?? []
-                checkCountMismatch(of: label, expect: currentValues.count, equals: expectedValues.count, outputIndentation: numberOfSpaces)
+                check(label, expect: currentValues.count, equals: expectedValues.count, outputIndentation: numberOfSpaces)
                 for (expectedValue, currentValue) in zip(expectedValues, currentValues) {
                     expect(currentValue, equals: Mirror(reflecting: expectedValue), recursiveLevel: recursiveLevel + 1)
                 }
             case let (expectedValue, currentValue) as (AcceptableNonliteral, JSONObject):
                 let expectedValue = Mirror(reflecting: expectedValue)
-                checkCountMismatch(of: label, expect: currentValue.count - 1, equals: Int(expectedValue.children.count), outputIndentation: numberOfSpaces) // currentValue contains 1 extra type value
+                Terminal.output(indentation: numberOfSpaces, isMatch: true, label: label, text: "")
                 expect(currentValue, equals: expectedValue, recursiveLevel: recursiveLevel + 1)
             case let (expectedValue, currentValue) as ([AnyHashable], [AnyHashable]?):
-                checkMismatch(of: label, expect: currentValue, equals: expectedValue, outputIndentation: numberOfSpaces)
+                check(label, expect: currentValue, equals: expectedValue, outputIndentation: numberOfSpaces)
             case let (expectedValue, currentValue) as (AnyHashable, AnyHashable?):
-                checkMismatch(of: label, expect: currentValue, equals: expectedValue, outputIndentation: numberOfSpaces)
+                check(label, expect: currentValue, equals: expectedValue, outputIndentation: numberOfSpaces)
             case let (expectedValue, currentValue):
                 let expectedValue = String(describing: expectedValue)
                 let currentValue = String(describing: currentValue)
-                checkMismatch(of: label, expect: currentValue, equals: expectedValue, outputIndentation: numberOfSpaces)
+                check(label, expect: currentValue, equals: expectedValue, outputIndentation: numberOfSpaces)
             }
         }
+    }
+}
+
+private extension Terminal {
+    static func output(indentation numberOfSpaces: Int, isMatch: Bool, label: String, text: String) {
+        let indentation = String(repeating: " ", count: numberOfSpaces)
+        let mark = isMatch ? "☑" : "☒"
+        Terminal.output("\(indentation)\(mark) \(label): \(text)", color: isMatch ? .default : .yellow)
     }
 }

@@ -18,15 +18,15 @@ extension Terminal {
         }
     }
     
-    static func output(_ string: String, to outputStream: OutputStream = .standardOutput, color outputColor: OutputColor = .default) {
+    static func output(_ string: String, terminator: String = "\n", to outputStream: OutputStream = .standardOutput, color outputColor: OutputColor = .default) {
         let string = outputColor.converted(string)
         switch outputStream {
         case .standardOutput:
             var standardOutput = StandardOutputStream()
-            print(string, to: &standardOutput)
+            print(string, terminator: terminator, to: &standardOutput)
         case .standardError:
             var standardError = StandardErrorStream()
-            print(string, to: &standardError)
+            print(string, terminator: terminator, to: &standardError)
         }
     }
 }
