@@ -4,7 +4,7 @@ import Apollo
 
 public final class RepositoryQuery: GraphQLQuery {
   public static let operationString =
-    "query Repository($name: String!, $owner: String!) {\n  repository(name: $name, owner: $owner) {\n    __typename\n    labels(first: 10) {\n      __typename\n      nodes {\n        __typename\n        color\n        name\n      }\n      totalCount\n    }\n    protectedBranches(first: 10) {\n      __typename\n      nodes {\n        __typename\n        hasDismissableStaleReviews\n        hasRequiredReviews\n        hasRequiredStatusChecks\n        hasRestrictedPushes\n        hasRestrictedReviewDismissals\n        hasStrictRequiredStatusChecks\n        isAdminEnforced\n        name\n        requiredStatusCheckContexts\n      }\n      totalCount\n    }\n    repositoryTopics(first: 10) {\n      __typename\n      nodes {\n        __typename\n        topic {\n          __typename\n          name\n        }\n      }\n      totalCount\n    }\n    codeOfConduct {\n      __typename\n      name\n    }\n    description\n    hasIssuesEnabled\n    hasWikiEnabled\n    homepageUrl\n    id\n    isArchived\n    isPrivate\n    licenseInfo {\n      __typename\n      name\n    }\n    name\n    url\n  }\n}"
+    "query Repository($name: String!, $owner: String!) {\n  repository(name: $name, owner: $owner) {\n    __typename\n    labels(first: 10) {\n      __typename\n      nodes {\n        __typename\n        color\n        name\n      }\n      totalCount\n    }\n    protectedBranches(first: 10) {\n      __typename\n      nodes {\n        __typename\n        hasDismissableStaleReviews\n        hasRequiredReviews\n        hasRequiredStatusChecks\n        hasRestrictedPushes\n        hasRestrictedReviewDismissals\n        hasStrictRequiredStatusChecks\n        isAdminEnforced\n        name\n        requiredStatusCheckContexts\n      }\n      totalCount\n    }\n    repositoryTopics(first: 10) {\n      __typename\n      nodes {\n        __typename\n        topic {\n          __typename\n          name\n        }\n      }\n      totalCount\n    }\n    codeOfConduct {\n      __typename\n      name\n    }\n    description\n    hasIssuesEnabled\n    hasWikiEnabled\n    homepageUrl\n    id\n    isArchived\n    isPrivate\n    licenseInfo {\n      __typename\n      name\n    }\n    mergeCommitAllowed\n    name\n    rebaseMergeAllowed\n    squashMergeAllowed\n    url\n  }\n}"
 
   public var name: String
   public var owner: String
@@ -62,7 +62,10 @@ public final class RepositoryQuery: GraphQLQuery {
         GraphQLField("isArchived", type: .nonNull(.scalar(Bool.self))),
         GraphQLField("isPrivate", type: .nonNull(.scalar(Bool.self))),
         GraphQLField("licenseInfo", type: .object(LicenseInfo.selections)),
+        GraphQLField("mergeCommitAllowed", type: .nonNull(.scalar(Bool.self))),
         GraphQLField("name", type: .nonNull(.scalar(String.self))),
+        GraphQLField("rebaseMergeAllowed", type: .nonNull(.scalar(Bool.self))),
+        GraphQLField("squashMergeAllowed", type: .nonNull(.scalar(Bool.self))),
         GraphQLField("url", type: .nonNull(.scalar(String.self))),
       ]
 
@@ -72,8 +75,8 @@ public final class RepositoryQuery: GraphQLQuery {
         self.snapshot = snapshot
       }
 
-      public init(labels: Label? = nil, protectedBranches: ProtectedBranch, repositoryTopics: RepositoryTopic, codeOfConduct: CodeOfConduct? = nil, description: String? = nil, hasIssuesEnabled: Bool, hasWikiEnabled: Bool, homepageUrl: String? = nil, id: GraphQLID, isArchived: Bool, isPrivate: Bool, licenseInfo: LicenseInfo? = nil, name: String, url: String) {
-        self.init(snapshot: ["__typename": "Repository", "labels": labels.flatMap { $0.snapshot }, "protectedBranches": protectedBranches.snapshot, "repositoryTopics": repositoryTopics.snapshot, "codeOfConduct": codeOfConduct.flatMap { $0.snapshot }, "description": description, "hasIssuesEnabled": hasIssuesEnabled, "hasWikiEnabled": hasWikiEnabled, "homepageUrl": homepageUrl, "id": id, "isArchived": isArchived, "isPrivate": isPrivate, "licenseInfo": licenseInfo.flatMap { $0.snapshot }, "name": name, "url": url])
+      public init(labels: Label? = nil, protectedBranches: ProtectedBranch, repositoryTopics: RepositoryTopic, codeOfConduct: CodeOfConduct? = nil, description: String? = nil, hasIssuesEnabled: Bool, hasWikiEnabled: Bool, homepageUrl: String? = nil, id: GraphQLID, isArchived: Bool, isPrivate: Bool, licenseInfo: LicenseInfo? = nil, mergeCommitAllowed: Bool, name: String, rebaseMergeAllowed: Bool, squashMergeAllowed: Bool, url: String) {
+        self.init(snapshot: ["__typename": "Repository", "labels": labels.flatMap { $0.snapshot }, "protectedBranches": protectedBranches.snapshot, "repositoryTopics": repositoryTopics.snapshot, "codeOfConduct": codeOfConduct.flatMap { $0.snapshot }, "description": description, "hasIssuesEnabled": hasIssuesEnabled, "hasWikiEnabled": hasWikiEnabled, "homepageUrl": homepageUrl, "id": id, "isArchived": isArchived, "isPrivate": isPrivate, "licenseInfo": licenseInfo.flatMap { $0.snapshot }, "mergeCommitAllowed": mergeCommitAllowed, "name": name, "rebaseMergeAllowed": rebaseMergeAllowed, "squashMergeAllowed": squashMergeAllowed, "url": url])
       }
 
       public var __typename: String {
@@ -204,6 +207,16 @@ public final class RepositoryQuery: GraphQLQuery {
         }
       }
 
+      /// Whether or not PRs are merged with a merge commit on this repository.
+      public var mergeCommitAllowed: Bool {
+        get {
+          return snapshot["mergeCommitAllowed"]! as! Bool
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "mergeCommitAllowed")
+        }
+      }
+
       /// The name of the repository.
       public var name: String {
         get {
@@ -211,6 +224,26 @@ public final class RepositoryQuery: GraphQLQuery {
         }
         set {
           snapshot.updateValue(newValue, forKey: "name")
+        }
+      }
+
+      /// Whether or not rebase-merging is enabled on this repository.
+      public var rebaseMergeAllowed: Bool {
+        get {
+          return snapshot["rebaseMergeAllowed"]! as! Bool
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "rebaseMergeAllowed")
+        }
+      }
+
+      /// Whether or not squash-merging is enabled on this repository.
+      public var squashMergeAllowed: Bool {
+        get {
+          return snapshot["squashMergeAllowed"]! as! Bool
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "squashMergeAllowed")
         }
       }
 

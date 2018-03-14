@@ -16,7 +16,10 @@ struct Configurations {
         var isArchived: Bool?
         var isPrivate: Bool?
         var licenseInfo: LicenseInfo?
+        var mergeCommitAllowed: Bool?
         var name: String?
+        var rebaseMergeAllowed: Bool?
+        var squashMergeAllowed: Bool?
         var url: String?
     }
 

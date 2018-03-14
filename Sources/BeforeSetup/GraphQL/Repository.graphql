@@ -42,7 +42,10 @@ query Repository($name: String!, $owner: String!) {
     licenseInfo {
       name
     }
+    mergeCommitAllowed
     name
+    rebaseMergeAllowed
+    squashMergeAllowed
     url
   }
 }

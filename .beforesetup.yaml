@@ -17,7 +17,10 @@ protectedBranches:
     hasRestrictedReviewDismissals: true
     hasStrictRequiredStatusChecks: true
     isAdminEnforced: false
+    mergeCommitAllowed: true
     name: master
+    rebaseMergeAllowed: true
+    squashMergeAllowed: true
     requiredStatusCheckContexts: []
 repositoryTopics:
   - topic:
