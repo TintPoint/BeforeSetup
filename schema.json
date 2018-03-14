@@ -1535,7 +1535,7 @@
                       "ofType": null
                     }
                   },
-                  "defaultValue": null
+                  "defaultValue": "[\"OWNER\", \"COLLABORATOR\"]"
                 },
                 {
                   "name": "isLocked",
@@ -1558,7 +1558,7 @@
                 }
               },
               "isDeprecated": true,
-              "deprecationReason": "Arguments for connection `contributedRepositories` are getting redesigned. Use `User.repositoriesContributedTo` instead. Removal on 2017-07-01 UTC."
+              "deprecationReason": "Arguments for connection `contributedRepositories` are getting redesigned. Use `User.repositoriesContributedTo` instead. Removal on 2018-07-01 UTC."
             },
             {
               "name": "createdAt",
@@ -1586,7 +1586,7 @@
                 "ofType": null
               },
               "isDeprecated": true,
-              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2017-07-01 UTC."
+              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2018-07-01 UTC."
             },
             {
               "name": "email",
@@ -2367,7 +2367,7 @@
                       "ofType": null
                     }
                   },
-                  "defaultValue": null
+                  "defaultValue": "[\"OWNER\", \"COLLABORATOR\"]"
                 },
                 {
                   "name": "isLocked",
@@ -2648,7 +2648,7 @@
                       "ofType": null
                     }
                   },
-                  "defaultValue": null
+                  "defaultValue": "[\"OWNER\", \"COLLABORATOR\"]"
                 },
                 {
                   "name": "isLocked",
@@ -2928,7 +2928,7 @@
                 }
               },
               "isDeprecated": true,
-              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2017-07-01 UTC."
+              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2018-07-01 UTC."
             },
             {
               "name": "url",
@@ -3054,7 +3054,7 @@
                       "ofType": null
                     }
                   },
-                  "defaultValue": null
+                  "defaultValue": "[\"OWNER\", \"COLLABORATOR\"]"
                 },
                 {
                   "name": "isLocked",
@@ -3450,7 +3450,7 @@
                 "ofType": null
               },
               "isDeprecated": true,
-              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2017-07-01 UTC."
+              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2018-07-01 UTC."
             },
             {
               "name": "defaultBranchRef",
@@ -3728,7 +3728,7 @@
                       "ofType": null
                     }
                   },
-                  "defaultValue": null
+                  "defaultValue": "[\"OWNER\", \"COLLABORATOR\"]"
                 },
                 {
                   "name": "isLocked",
@@ -4120,6 +4120,16 @@
                     "ofType": null
                   },
                   "defaultValue": null
+                },
+                {
+                  "name": "query",
+                  "description": "If provided, searches labels by name and description.",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
                 }
               ],
               "type": {
@@ -4203,7 +4213,7 @@
                 "ofType": null
               },
               "isDeprecated": true,
-              "deprecationReason": "Field `license` will be replaced by a more detailed license object. Use `Repository.licenseInfo` instead. Removal on 2017-07-01 UTC."
+              "deprecationReason": "Field `license` will be replaced by a more detailed license object. Use `Repository.licenseInfo` instead. Removal on 2018-07-01 UTC."
             },
             {
               "name": "licenseInfo",
@@ -4287,6 +4297,22 @@
               "deprecationReason": null
             },
             {
+              "name": "mergeCommitAllowed",
+              "description": "Whether or not PRs are merged with a merge commit on this repository.",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "milestone",
               "description": "Returns a single milestone from the current repository by number.",
               "args": [
@@ -4353,6 +4379,34 @@
                   "type": {
                     "kind": "SCALAR",
                     "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "states",
+                  "description": "Filter by the state of the milestones.",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "ENUM",
+                        "name": "MilestoneState",
+                        "ofType": null
+                      }
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "orderBy",
+                  "description": "Ordering options for milestones.",
+                  "type": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "MilestoneOrder",
                     "ofType": null
                   },
                   "defaultValue": null
@@ -4857,12 +4911,28 @@
               "deprecationReason": null
             },
             {
+              "name": "rebaseMergeAllowed",
+              "description": "Whether or not rebase-merging is enabled on this repository.",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "ref",
               "description": "Fetch a given ref from the repository",
               "args": [
                 {
                   "name": "qualifiedName",
-                  "description": "The ref to retrieve.Fully qualified matches are checked in order (`refs/heads/master`) before falling back onto checks for short name matches (`master`).",
+                  "description": "The ref to retrieve. Fully qualified matches are checked in order (`refs/heads/master`) before falling back onto checks for short name matches (`master`).",
                   "type": {
                     "kind": "NON_NULL",
                     "name": null,
@@ -5165,6 +5235,22 @@
               "deprecationReason": null
             },
             {
+              "name": "squashMergeAllowed",
+              "description": "Whether or not squash-merging is enabled on this repository.",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "sshUrl",
               "description": "The SSH URL to clone this repository",
               "args": [],
@@ -5261,7 +5347,7 @@
                 }
               },
               "isDeprecated": true,
-              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2017-07-01 UTC."
+              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2018-07-01 UTC."
             },
             {
               "name": "url",
@@ -5355,6 +5441,18 @@
                   "name": "Boolean",
                   "ofType": null
                 }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "viewerPermission",
+              "description": "The users permission level on the repository. Will return null if authenticated as an GitHub App.",
+              "args": [],
+              "type": {
+                "kind": "ENUM",
+                "name": "RepositoryPermission",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -5833,7 +5931,7 @@
                 "ofType": null
               },
               "isDeprecated": true,
-              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2017-07-01 UTC."
+              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2018-07-01 UTC."
             },
             {
               "name": "id",
@@ -6002,7 +6100,7 @@
                 }
               },
               "isDeprecated": true,
-              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2017-07-01 UTC."
+              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2018-07-01 UTC."
             },
             {
               "name": "url",
@@ -6431,7 +6529,7 @@
                 "ofType": null
               },
               "isDeprecated": true,
-              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2017-07-01 UTC."
+              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2018-07-01 UTC."
             },
             {
               "name": "id",
@@ -6511,7 +6609,7 @@
                 }
               },
               "isDeprecated": true,
-              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2017-07-01 UTC."
+              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2018-07-01 UTC."
             },
             {
               "name": "url",
@@ -6722,7 +6820,7 @@
                 "ofType": null
               },
               "isDeprecated": true,
-              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2017-07-01 UTC."
+              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2018-07-01 UTC."
             },
             {
               "name": "id",
@@ -6782,7 +6880,7 @@
                 }
               },
               "isDeprecated": true,
-              "deprecationReason": "The associated column may be null if the card is in a pending state. Use `ProjectCard.column` instead. Removal on 2017-07-01 UTC."
+              "deprecationReason": "The associated column may be null if the card is in a pending state. Use `ProjectCard.column` instead. Removal on 2018-07-01 UTC."
             },
             {
               "name": "resourcePath",
@@ -6826,7 +6924,7 @@
                 }
               },
               "isDeprecated": true,
-              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2017-07-01 UTC."
+              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2018-07-01 UTC."
             },
             {
               "name": "url",
@@ -7183,7 +7281,7 @@
                 "ofType": null
               },
               "isDeprecated": true,
-              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2017-07-01 UTC."
+              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2018-07-01 UTC."
             },
             {
               "name": "editor",
@@ -7690,7 +7788,7 @@
                 }
               },
               "isDeprecated": true,
-              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2017-07-01 UTC."
+              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2018-07-01 UTC."
             },
             {
               "name": "url",
@@ -8355,7 +8453,7 @@
                 }
               },
               "isDeprecated": true,
-              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2017-07-01 UTC."
+              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2018-07-01 UTC."
             },
             {
               "name": "userContentEdits",
@@ -8645,7 +8743,7 @@
                 }
               },
               "isDeprecated": true,
-              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2017-07-01 UTC."
+              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2018-07-01 UTC."
             }
           ],
           "inputFields": null,
@@ -9035,6 +9133,18 @@
               "deprecationReason": null
             },
             {
+              "name": "description",
+              "description": "A brief description of this label.",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "id",
               "description": null,
               "args": [],
@@ -9044,6 +9154,22 @@
                 "ofType": {
                   "kind": "SCALAR",
                   "name": "ID",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "isDefault",
+              "description": "Indicates whether or not this is a default label.",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
                   "ofType": null
                 }
               },
@@ -10072,7 +10198,7 @@
                 "ofType": null
               },
               "isDeprecated": true,
-              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2017-07-01 UTC."
+              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2018-07-01 UTC."
             },
             {
               "name": "deletions",
@@ -10933,7 +11059,7 @@
                 }
               },
               "isDeprecated": true,
-              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2017-07-01 UTC."
+              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2018-07-01 UTC."
             },
             {
               "name": "url",
@@ -11275,7 +11401,7 @@
                 "ofType": null
               },
               "isDeprecated": true,
-              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2017-07-01 UTC."
+              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2018-07-01 UTC."
             },
             {
               "name": "id",
@@ -11924,7 +12050,7 @@
                 "ofType": null
               },
               "isDeprecated": true,
-              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2017-07-01 UTC."
+              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2018-07-01 UTC."
             },
             {
               "name": "id",
@@ -12576,6 +12702,184 @@
           "fields": null,
           "inputFields": null,
           "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "Blob",
+          "description": "Represents a Git blob.",
+          "fields": [
+            {
+              "name": "abbreviatedOid",
+              "description": "An abbreviated version of the Git object ID",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "byteSize",
+              "description": "Byte size of Blob object",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "commitResourcePath",
+              "description": "The HTTP path for this Git object",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "URI",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "commitUrl",
+              "description": "The HTTP URL for this Git object",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "URI",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "id",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "isBinary",
+              "description": "Indicates whether the Blob is binary or text",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "isTruncated",
+              "description": "Indicates whether the contents is truncated",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "oid",
+              "description": "The Git object ID",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "GitObjectID",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "repository",
+              "description": "The Repository the Git object belongs to",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Repository",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "text",
+              "description": "UTF8 text data or null if the Blob is binary",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "kind": "INTERFACE",
+              "name": "Node",
+              "ofType": null
+            },
+            {
+              "kind": "INTERFACE",
+              "name": "GitObject",
+              "ofType": null
+            }
+          ],
           "enumValues": null,
           "possibleTypes": null
         },
@@ -14138,7 +14442,7 @@
                 "ofType": null
               },
               "isDeprecated": true,
-              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2017-07-01 UTC."
+              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2018-07-01 UTC."
             },
             {
               "name": "editor",
@@ -14359,7 +14663,7 @@
                 }
               },
               "isDeprecated": true,
-              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2017-07-01 UTC."
+              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2018-07-01 UTC."
             },
             {
               "name": "url",
@@ -14817,6 +15121,24 @@
               "description": "Signing key expired.",
               "isDeprecated": false,
               "deprecationReason": null
+            },
+            {
+              "name": "OCSP_PENDING",
+              "description": "Valid signature, pending certificate revocation checking",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "OCSP_ERROR",
+              "description": "Valid siganture, though certificate revocation check failed",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "OCSP_REVOKED",
+              "description": "One or more certificates in chain has been revoked",
+              "isDeprecated": false,
+              "deprecationReason": null
             }
           ],
           "possibleTypes": null
@@ -15214,184 +15536,6 @@
           "possibleTypes": null
         },
         {
-          "kind": "OBJECT",
-          "name": "Blob",
-          "description": "Represents a Git blob.",
-          "fields": [
-            {
-              "name": "abbreviatedOid",
-              "description": "An abbreviated version of the Git object ID",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "byteSize",
-              "description": "Byte size of Blob object",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "commitResourcePath",
-              "description": "The HTTP path for this Git object",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "URI",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "commitUrl",
-              "description": "The HTTP URL for this Git object",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "URI",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "id",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "ID",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "isBinary",
-              "description": "Indicates whether the Blob is binary or text",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "isTruncated",
-              "description": "Indicates whether the contents is truncated",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "oid",
-              "description": "The Git object ID",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "GitObjectID",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "repository",
-              "description": "The Repository the Git object belongs to",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Repository",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "text",
-              "description": "UTF8 text data or null if the Blob is binary",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [
-            {
-              "kind": "INTERFACE",
-              "name": "Node",
-              "ofType": null
-            },
-            {
-              "kind": "INTERFACE",
-              "name": "GitObject",
-              "ofType": null
-            }
-          ],
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
           "kind": "ENUM",
           "name": "PullRequestState",
           "description": "The possible states of a pull request.",
@@ -15560,7 +15704,7 @@
                       "ofType": null
                     }
                   },
-                  "defaultValue": null
+                  "defaultValue": "[\"OWNER\", \"COLLABORATOR\"]"
                 },
                 {
                   "name": "isLocked",
@@ -15661,7 +15805,7 @@
                       "ofType": null
                     }
                   },
-                  "defaultValue": null
+                  "defaultValue": "[\"OWNER\", \"COLLABORATOR\"]"
                 },
                 {
                   "name": "isLocked",
@@ -16455,7 +16599,7 @@
                 }
               },
               "isDeprecated": true,
-              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2017-07-01 UTC."
+              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2018-07-01 UTC."
             },
             {
               "name": "url",
@@ -16784,7 +16928,7 @@
                 "ofType": null
               },
               "isDeprecated": true,
-              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2017-07-01 UTC."
+              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2018-07-01 UTC."
             },
             {
               "name": "editor",
@@ -17009,7 +17153,7 @@
                 }
               },
               "isDeprecated": true,
-              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2017-07-01 UTC."
+              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2018-07-01 UTC."
             },
             {
               "name": "url",
@@ -17539,7 +17683,7 @@
                 "ofType": null
               },
               "isDeprecated": true,
-              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2017-07-01 UTC."
+              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2018-07-01 UTC."
             },
             {
               "name": "editor",
@@ -17683,7 +17827,7 @@
                 }
               },
               "isDeprecated": true,
-              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2017-07-01 UTC."
+              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2018-07-01 UTC."
             },
             {
               "name": "url",
@@ -18157,7 +18301,7 @@
                 "ofType": null
               },
               "isDeprecated": true,
-              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2017-07-01 UTC."
+              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2018-07-01 UTC."
             },
             {
               "name": "diffHunk",
@@ -19671,7 +19815,7 @@
                 }
               },
               "isDeprecated": true,
-              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2017-07-01 UTC."
+              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2018-07-01 UTC."
             },
             {
               "name": "url",
@@ -20719,7 +20863,7 @@
                 "ofType": null
               },
               "isDeprecated": true,
-              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2017-07-01 UTC."
+              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2018-07-01 UTC."
             },
             {
               "name": "description",
@@ -20978,7 +21122,7 @@
                       "ofType": null
                     }
                   },
-                  "defaultValue": null
+                  "defaultValue": "[\"OWNER\", \"COLLABORATOR\"]"
                 },
                 {
                   "name": "isLocked",
@@ -21233,7 +21377,7 @@
                       "ofType": null
                     }
                   },
-                  "defaultValue": null
+                  "defaultValue": "[\"OWNER\", \"COLLABORATOR\"]"
                 },
                 {
                   "name": "isLocked",
@@ -22617,7 +22761,7 @@
                 "ofType": null
               },
               "isDeprecated": true,
-              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2017-07-01 UTC."
+              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2018-07-01 UTC."
             },
             {
               "name": "id",
@@ -22681,7 +22825,7 @@
                 }
               },
               "isDeprecated": true,
-              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2017-07-01 UTC."
+              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2018-07-01 UTC."
             },
             {
               "name": "url",
@@ -23515,26 +23659,32 @@
         {
           "kind": "ENUM",
           "name": "DefaultRepositoryPermissionField",
-          "description": "The possible default permissions for organization-owned repositories.",
+          "description": "The possible default permissions for repositories.",
           "fields": null,
           "inputFields": null,
           "interfaces": null,
           "enumValues": [
             {
+              "name": "NONE",
+              "description": "No access",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "READ",
-              "description": "Members have read access to org repos by default",
+              "description": "Can read repos by default",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "WRITE",
-              "description": "Members have read and write access to org repos by default",
+              "description": "Can read and write repos by default",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "ADMIN",
-              "description": "Members have read, write, and admin access to org repos by default",
+              "description": "Can read, write, and administrate repos by default",
               "isDeprecated": false,
               "deprecationReason": null
             }
@@ -23977,7 +24127,7 @@
                 }
               },
               "isDeprecated": true,
-              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2017-07-01 UTC."
+              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2018-07-01 UTC."
             },
             {
               "name": "viewerHasStarred",
@@ -24535,6 +24685,18 @@
               "deprecationReason": null
             },
             {
+              "name": "databaseId",
+              "description": "Identifies the primary key from the database.",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "isDeprecated": true,
+              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2018-07-01 UTC."
+            },
+            {
               "name": "editor",
               "description": "The actor who edited the comment.",
               "args": [],
@@ -24616,7 +24778,7 @@
                 }
               },
               "isDeprecated": true,
-              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2017-07-01 UTC."
+              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2018-07-01 UTC."
             },
             {
               "name": "userContentEdits",
@@ -24870,6 +25032,804 @@
               "deprecationReason": null
             }
           ],
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "RepositoryInvitation",
+          "description": "An invitation for a user to be added to a repository.",
+          "fields": [
+            {
+              "name": "id",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "invitee",
+              "description": "The user who received the invitation.",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "User",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "inviter",
+              "description": "The user who created the invitation.",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "User",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "permission",
+              "description": "The permission granted on this repository by this invitation.",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "RepositoryPermission",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "repository",
+              "description": "The Repository the user is invited to.",
+              "args": [],
+              "type": {
+                "kind": "INTERFACE",
+                "name": "RepositoryInfo",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "kind": "INTERFACE",
+              "name": "Node",
+              "ofType": null
+            }
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INTERFACE",
+          "name": "RepositoryInfo",
+          "description": "A subset of repository info.",
+          "fields": [
+            {
+              "name": "createdAt",
+              "description": "Identifies the date and time when the object was created.",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "DateTime",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "description",
+              "description": "The description of the repository.",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "descriptionHTML",
+              "description": "The description of the repository rendered to HTML.",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "HTML",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "forkCount",
+              "description": "Returns how many forks there are of this repository in the whole network.",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "hasIssuesEnabled",
+              "description": "Indicates if the repository has issues feature enabled.",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "hasWikiEnabled",
+              "description": "Indicates if the repository has wiki feature enabled.",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "homepageUrl",
+              "description": "The repository's URL.",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "URI",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "isArchived",
+              "description": "Indicates if the repository is unmaintained.",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "isFork",
+              "description": "Identifies if the repository is a fork.",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "isLocked",
+              "description": "Indicates if the repository has been locked or not.",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "isMirror",
+              "description": "Identifies if the repository is a mirror.",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "isPrivate",
+              "description": "Identifies if the repository is private.",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "license",
+              "description": "The license associated with the repository",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": true,
+              "deprecationReason": "Field `license` will be replaced by a more detailed license object. Use `Repository.licenseInfo` instead. Removal on 2018-07-01 UTC."
+            },
+            {
+              "name": "licenseInfo",
+              "description": "The license associated with the repository",
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "License",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "lockReason",
+              "description": "The reason the repository has been locked.",
+              "args": [],
+              "type": {
+                "kind": "ENUM",
+                "name": "RepositoryLockReason",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "mirrorUrl",
+              "description": "The repository's original mirror URL.",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "URI",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "name",
+              "description": "The name of the repository.",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "nameWithOwner",
+              "description": "The repository's name with owner.",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "owner",
+              "description": "The User owner of the repository.",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "INTERFACE",
+                  "name": "RepositoryOwner",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "pushedAt",
+              "description": "Identifies when the repository was last pushed to.",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "DateTime",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "resourcePath",
+              "description": "The HTTP path for this repository",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "URI",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "shortDescriptionHTML",
+              "description": "A description of the repository, rendered to HTML without any links in it.",
+              "args": [
+                {
+                  "name": "limit",
+                  "description": "How many characters to return.",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": "200"
+                }
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "HTML",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "updatedAt",
+              "description": "Identifies the date and time when the object was last updated.",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "DateTime",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": true,
+              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2018-07-01 UTC."
+            },
+            {
+              "name": "url",
+              "description": "The HTTP URL for this repository",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "URI",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": [
+            {
+              "kind": "OBJECT",
+              "name": "Repository",
+              "ofType": null
+            }
+          ]
+        },
+        {
+          "kind": "ENUM",
+          "name": "RepositoryLockReason",
+          "description": "The possible reasons a given repository could be in a locked state.",
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "enumValues": [
+            {
+              "name": "MOVING",
+              "description": "The repository is locked due to a move.",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "BILLING",
+              "description": "The repository is locked due to a billing related reason.",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "RENAME",
+              "description": "The repository is locked due to a rename.",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "MIGRATING",
+              "description": "The repository is locked due to a migration.",
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "License",
+          "description": "A respository's open source license",
+          "fields": [
+            {
+              "name": "body",
+              "description": "The full text of the license",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "conditions",
+              "description": "The conditions set by the license",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "LicenseRule",
+                    "ofType": null
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "description",
+              "description": "A human-readable description of the license",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "featured",
+              "description": "Whether the license should be featured",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "hidden",
+              "description": "Whether the license should be displayed in license pickers",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "id",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "implementation",
+              "description": "Instructions on how to implement the license",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "key",
+              "description": "The lowercased SPDX ID of the license",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "limitations",
+              "description": "The limitations set by the license",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "LicenseRule",
+                    "ofType": null
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "name",
+              "description": "The license full name specified by <https://spdx.org/licenses>",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "nickname",
+              "description": "Customary short name if applicable (e.g, GPLv3)",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "permissions",
+              "description": "The permissions set by the license",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "LicenseRule",
+                    "ofType": null
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "spdxId",
+              "description": "Short identifier specified by <https://spdx.org/licenses>",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "url",
+              "description": "URL to the license on <https://choosealicense.com>",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "URI",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "LicenseRule",
+          "description": "Describes a License's conditions, permissions, and limitations",
+          "fields": [
+            {
+              "name": "description",
+              "description": "A description of the rule",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "key",
+              "description": "The machine-readable rule key",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "label",
+              "description": "The human-readable rule label",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
           "possibleTypes": null
         },
         {
@@ -25275,7 +26235,7 @@
                 "ofType": null
               },
               "isDeprecated": true,
-              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2017-07-01 UTC."
+              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2018-07-01 UTC."
             },
             {
               "name": "id",
@@ -25331,7 +26291,7 @@
                 "ofType": null
               },
               "isDeprecated": true,
-              "deprecationReason": "Field `reviewer` will be changed in favor of returning a union type. Use `ReviewRequest.requestedReviewer` instead. Removal on 2017-07-01 UTC."
+              "deprecationReason": "Field `reviewer` will be changed in favor of returning a union type. Use `ReviewRequest.requestedReviewer` instead. Removal on 2018-07-01 UTC."
             }
           ],
           "inputFields": null,
@@ -27549,7 +28509,7 @@
                 "ofType": null
               },
               "isDeprecated": true,
-              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2017-07-01 UTC."
+              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2018-07-01 UTC."
             },
             {
               "name": "deployment",
@@ -27678,7 +28638,7 @@
                 "ofType": null
               },
               "isDeprecated": true,
-              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2017-07-01 UTC."
+              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2018-07-01 UTC."
             },
             {
               "name": "environment",
@@ -28070,7 +29030,7 @@
                 }
               },
               "isDeprecated": true,
-              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2017-07-01 UTC."
+              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2018-07-01 UTC."
             }
           ],
           "inputFields": null,
@@ -28831,7 +29791,7 @@
                 "ofType": null
               },
               "isDeprecated": true,
-              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2017-07-01 UTC."
+              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2018-07-01 UTC."
             },
             {
               "name": "id",
@@ -29029,7 +29989,7 @@
                 "ofType": null
               },
               "isDeprecated": true,
-              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2017-07-01 UTC."
+              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2018-07-01 UTC."
             },
             {
               "name": "id",
@@ -29102,7 +30062,7 @@
                 "ofType": null
               },
               "isDeprecated": true,
-              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2017-07-01 UTC."
+              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2018-07-01 UTC."
             },
             {
               "name": "id",
@@ -29175,7 +30135,7 @@
                 "ofType": null
               },
               "isDeprecated": true,
-              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2017-07-01 UTC."
+              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2018-07-01 UTC."
             },
             {
               "name": "id",
@@ -29248,7 +30208,7 @@
                 "ofType": null
               },
               "isDeprecated": true,
-              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2017-07-01 UTC."
+              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2018-07-01 UTC."
             },
             {
               "name": "id",
@@ -29342,7 +30302,7 @@
                 "ofType": null
               },
               "isDeprecated": true,
-              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2017-07-01 UTC."
+              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2018-07-01 UTC."
             },
             {
               "name": "id",
@@ -29415,7 +30375,7 @@
                 "ofType": null
               },
               "isDeprecated": true,
-              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2017-07-01 UTC."
+              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2018-07-01 UTC."
             },
             {
               "name": "id",
@@ -29488,7 +30448,7 @@
                 "ofType": null
               },
               "isDeprecated": true,
-              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2017-07-01 UTC."
+              "deprecationReason": "Exposed database IDs will eventually be removed in favor of global Relay IDs. Use `Node.id` instead. Removal on 2018-07-01 UTC."
             },
             {
               "name": "id",
@@ -29788,713 +30748,32 @@
           ]
         },
         {
-          "kind": "INTERFACE",
-          "name": "RepositoryInfo",
-          "description": "A subset of repository info.",
-          "fields": [
-            {
-              "name": "createdAt",
-              "description": "Identifies the date and time when the object was created.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "DateTime",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "description",
-              "description": "The description of the repository.",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "descriptionHTML",
-              "description": "The description of the repository rendered to HTML.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "HTML",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "forkCount",
-              "description": "Returns how many forks there are of this repository in the whole network.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "hasIssuesEnabled",
-              "description": "Indicates if the repository has issues feature enabled.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "hasWikiEnabled",
-              "description": "Indicates if the repository has wiki feature enabled.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "homepageUrl",
-              "description": "The repository's URL.",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "URI",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "isArchived",
-              "description": "Indicates if the repository is unmaintained.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "isFork",
-              "description": "Identifies if the repository is a fork.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "isLocked",
-              "description": "Indicates if the repository has been locked or not.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "isMirror",
-              "description": "Identifies if the repository is a mirror.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "isPrivate",
-              "description": "Identifies if the repository is private.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "license",
-              "description": "The license associated with the repository",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Field `license` will be replaced by a more detailed license object. Use `Repository.licenseInfo` instead. Removal on 2017-07-01 UTC."
-            },
-            {
-              "name": "licenseInfo",
-              "description": "The license associated with the repository",
-              "args": [],
-              "type": {
-                "kind": "OBJECT",
-                "name": "License",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "lockReason",
-              "description": "The reason the repository has been locked.",
-              "args": [],
-              "type": {
-                "kind": "ENUM",
-                "name": "RepositoryLockReason",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "mirrorUrl",
-              "description": "The repository's original mirror URL.",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "URI",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "name",
-              "description": "The name of the repository.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "nameWithOwner",
-              "description": "The repository's name with owner.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "owner",
-              "description": "The User owner of the repository.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "INTERFACE",
-                  "name": "RepositoryOwner",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "pushedAt",
-              "description": "Identifies when the repository was last pushed to.",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "DateTime",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "resourcePath",
-              "description": "The HTTP path for this repository",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "URI",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "shortDescriptionHTML",
-              "description": "A description of the repository, rendered to HTML without any links in it.",
-              "args": [
-                {
-                  "name": "limit",
-                  "description": "How many characters to return.",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
-                  },
-                  "defaultValue": "200"
-                }
-              ],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "HTML",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "updatedAt",
-              "description": "Identifies the date and time when the object was last updated.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "DateTime",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2017-07-01 UTC."
-            },
-            {
-              "name": "url",
-              "description": "The HTTP URL for this repository",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "URI",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": null,
-          "enumValues": null,
-          "possibleTypes": [
-            {
-              "kind": "OBJECT",
-              "name": "Repository",
-              "ofType": null
-            },
-            {
-              "kind": "OBJECT",
-              "name": "RepositoryInvitationRepository",
-              "ofType": null
-            }
-          ]
-        },
-        {
           "kind": "ENUM",
-          "name": "RepositoryLockReason",
-          "description": "The possible reasons a given repository could be in a locked state.",
+          "name": "CollaboratorAffiliation",
+          "description": "Collaborators affiliation level with a subject.",
           "fields": null,
           "inputFields": null,
           "interfaces": null,
           "enumValues": [
             {
-              "name": "MOVING",
-              "description": "The repository is locked due to a move.",
+              "name": "OUTSIDE",
+              "description": "All outside collaborators of an organization-owned subject.",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "BILLING",
-              "description": "The repository is locked due to a billing related reason.",
+              "name": "DIRECT",
+              "description": "All collaborators with permissions to an organization-owned subject, regardless of organization membership status.",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "RENAME",
-              "description": "The repository is locked due to a rename.",
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "MIGRATING",
-              "description": "The repository is locked due to a migration.",
+              "name": "ALL",
+              "description": "All collaborators the authenticated user can see.",
               "isDeprecated": false,
               "deprecationReason": null
             }
           ],
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
-          "name": "License",
-          "description": "A respository's open source license",
-          "fields": [
-            {
-              "name": "body",
-              "description": "The full text of the license",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "conditions",
-              "description": "The conditions set by the license",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "LIST",
-                  "name": null,
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "LicenseRule",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "description",
-              "description": "A human-readable description of the license",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "featured",
-              "description": "Whether the license should be featured",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "hidden",
-              "description": "Whether the license should be displayed in license pickers",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "id",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "ID",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "implementation",
-              "description": "Instructions on how to implement the license",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "key",
-              "description": "The lowercased SPDX ID of the license",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "limitations",
-              "description": "The limitations set by the license",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "LIST",
-                  "name": null,
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "LicenseRule",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "name",
-              "description": "The license full name specified by <https://spdx.org/licenses>",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "nickname",
-              "description": "Customary short name if applicable (e.g, GPLv3)",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "permissions",
-              "description": "The permissions set by the license",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "LIST",
-                  "name": null,
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "LicenseRule",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "spdxId",
-              "description": "Short identifier specified by <https://spdx.org/licenses>",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "url",
-              "description": "URL to the license on <https://choosealicense.com>",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "URI",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
-          "name": "LicenseRule",
-          "description": "Describes a License's conditions, permissions, and limitations",
-          "fields": [
-            {
-              "name": "description",
-              "description": "A description of the rule",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "key",
-              "description": "The machine-readable rule key",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "label",
-              "description": "The human-readable rule label",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
-          "enumValues": null,
           "possibleTypes": null
         },
         {
@@ -31246,7 +31525,7 @@
                 }
               },
               "isDeprecated": true,
-              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2017-07-01 UTC."
+              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2018-07-01 UTC."
             },
             {
               "name": "url",
@@ -31538,7 +31817,7 @@
                 }
               },
               "isDeprecated": true,
-              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2017-07-01 UTC."
+              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2018-07-01 UTC."
             },
             {
               "name": "uploadedBy",
@@ -32524,6 +32803,80 @@
           "possibleTypes": null
         },
         {
+          "kind": "INPUT_OBJECT",
+          "name": "MilestoneOrder",
+          "description": "Ordering options for milestone connections.",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "field",
+              "description": "The field to order milestones by.",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "MilestoneOrderField",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "direction",
+              "description": "The ordering direction.",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "OrderDirection",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "ENUM",
+          "name": "MilestoneOrderField",
+          "description": "Properties by which milestone connections can be ordered.",
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "enumValues": [
+            {
+              "name": "DUE_DATE",
+              "description": "Order milestones by when they are due.",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "CREATED_AT",
+              "description": "Order milestones by when they were created.",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "UPDATED_AT",
+              "description": "Order milestones by when they were last updated.",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "NUMBER",
+              "description": "Order milestones by their number.",
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "possibleTypes": null
+        },
+        {
           "kind": "OBJECT",
           "name": "CodeOfConduct",
           "description": "The Code of Conduct for a repository",
@@ -32722,35 +33075,6 @@
           "inputFields": null,
           "interfaces": [],
           "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "ENUM",
-          "name": "CollaboratorAffiliation",
-          "description": "Collaborators affiliation level with a repository.",
-          "fields": null,
-          "inputFields": null,
-          "interfaces": null,
-          "enumValues": [
-            {
-              "name": "OUTSIDE",
-              "description": "All outside collaborators of an organization-owned repository.",
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "DIRECT",
-              "description": "All collaborators with permissions to an organization-owned repository, regardless of organization membership status.",
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "ALL",
-              "description": "All collaborators the authenticated user can see.",
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
           "possibleTypes": null
         },
         {
@@ -34477,6 +34801,32 @@
           "interfaces": [],
           "enumValues": null,
           "possibleTypes": null
+        },
+        {
+          "kind": "UNION",
+          "name": "CollectionItemContent",
+          "description": "Types that can be inside Collection Items.",
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": [
+            {
+              "kind": "OBJECT",
+              "name": "Repository",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "Organization",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "User",
+              "ofType": null
+            }
+          ]
         },
         {
           "kind": "OBJECT",
@@ -39424,467 +39774,6 @@
             {
               "kind": "INTERFACE",
               "name": "GitSignature",
-              "ofType": null
-            }
-          ],
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
-          "name": "RepositoryInvitation",
-          "description": "An invitation for a user to be added to a repository.",
-          "fields": [
-            {
-              "name": "id",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "ID",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "invitee",
-              "description": "The user who received the invitation.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "User",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "inviter",
-              "description": "The user who created the invitation.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "User",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "repository",
-              "description": "The Repository the user is invited to.",
-              "args": [],
-              "type": {
-                "kind": "OBJECT",
-                "name": "RepositoryInvitationRepository",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [
-            {
-              "kind": "INTERFACE",
-              "name": "Node",
-              "ofType": null
-            }
-          ],
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
-          "name": "RepositoryInvitationRepository",
-          "description": "A subset of repository info shared with potential collaborators.",
-          "fields": [
-            {
-              "name": "createdAt",
-              "description": "Identifies the date and time when the object was created.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "DateTime",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "description",
-              "description": "The description of the repository.",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "descriptionHTML",
-              "description": "The description of the repository rendered to HTML.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "HTML",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "forkCount",
-              "description": "Returns how many forks there are of this repository in the whole network.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "hasIssuesEnabled",
-              "description": "Indicates if the repository has issues feature enabled.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "hasWikiEnabled",
-              "description": "Indicates if the repository has wiki feature enabled.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "homepageUrl",
-              "description": "The repository's URL.",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "URI",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "isArchived",
-              "description": "Indicates if the repository is unmaintained.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "isFork",
-              "description": "Identifies if the repository is a fork.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "isLocked",
-              "description": "Indicates if the repository has been locked or not.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "isMirror",
-              "description": "Identifies if the repository is a mirror.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "isPrivate",
-              "description": "Identifies if the repository is private.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "license",
-              "description": "The license associated with the repository",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Field `license` will be replaced by a more detailed license object. Use `Repository.licenseInfo` instead. Removal on 2017-07-01 UTC."
-            },
-            {
-              "name": "licenseInfo",
-              "description": "The license associated with the repository",
-              "args": [],
-              "type": {
-                "kind": "OBJECT",
-                "name": "License",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "lockReason",
-              "description": "The reason the repository has been locked.",
-              "args": [],
-              "type": {
-                "kind": "ENUM",
-                "name": "RepositoryLockReason",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "mirrorUrl",
-              "description": "The repository's original mirror URL.",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "URI",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "name",
-              "description": "The name of the repository.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "nameWithOwner",
-              "description": "The repository's name with owner.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "owner",
-              "description": "The owner of the repository associated with this invitation repository.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "INTERFACE",
-                  "name": "RepositoryOwner",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "pushedAt",
-              "description": "Identifies when the repository was last pushed to.",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "DateTime",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "resourcePath",
-              "description": "The HTTP path for this repository",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "URI",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "shortDescriptionHTML",
-              "description": "A description of the repository, rendered to HTML without any links in it.",
-              "args": [
-                {
-                  "name": "limit",
-                  "description": "How many characters to return.",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
-                  },
-                  "defaultValue": "200"
-                }
-              ],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "HTML",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "updatedAt",
-              "description": "Identifies the date and time when the object was last updated.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "DateTime",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "General type updated timestamps will eventually be replaced by other field specific timestamps. Removal on 2017-07-01 UTC."
-            },
-            {
-              "name": "url",
-              "description": "The HTTP URL for this repository",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "URI",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [
-            {
-              "kind": "INTERFACE",
-              "name": "RepositoryInfo",
               "ofType": null
             }
           ],
