@@ -3,6 +3,8 @@ query Repository($name: String!, $owner: String!) {
     labels(first: 10) {
       nodes {
         color
+        description
+        isDefault
         name
       }
       totalCount

@@ -1,13 +1,23 @@
 labels:
   - name: bug
+    description: Something isn't working
     color: d73a4a
+    isDefault: true
   - name: enhancement
+    description: New feature or request
     color: a2eeef
+    isDefault: true
   - name: good first issue
+    description: Good for newcomers
     color: 7057ff
+    isDefault: true
   - name: help wanted
+    description: Extra attention is needed
     color: 008672
+    isDefault: true
   - name: high priority
+    description: This is really important
+    isDefault: false
     color: e4e669
 protectedBranches:
   - hasDismissableStaleReviews: true
@@ -41,5 +51,8 @@ isArchived: false
 isPrivate: false
 licenseInfo:
   name: MIT License
+mergeCommitAllowed: true
 name: BeforeSetup
+rebaseMergeAllowed: true
+squashMergeAllowed: true
 url: https://github.com/TintPoint/BeforeSetup

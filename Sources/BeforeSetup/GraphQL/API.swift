@@ -4,7 +4,7 @@ import Apollo
 
 public final class RepositoryQuery: GraphQLQuery {
   public static let operationString =
-    "query Repository($name: String!, $owner: String!) {\n  repository(name: $name, owner: $owner) {\n    __typename\n    labels(first: 10) {\n      __typename\n      nodes {\n        __typename\n        color\n        name\n      }\n      totalCount\n    }\n    protectedBranches(first: 10) {\n      __typename\n      nodes {\n        __typename\n        hasDismissableStaleReviews\n        hasRequiredReviews\n        hasRequiredStatusChecks\n        hasRestrictedPushes\n        hasRestrictedReviewDismissals\n        hasStrictRequiredStatusChecks\n        isAdminEnforced\n        name\n        requiredStatusCheckContexts\n      }\n      totalCount\n    }\n    repositoryTopics(first: 10) {\n      __typename\n      nodes {\n        __typename\n        topic {\n          __typename\n          name\n        }\n      }\n      totalCount\n    }\n    codeOfConduct {\n      __typename\n      name\n    }\n    description\n    hasIssuesEnabled\n    hasWikiEnabled\n    homepageUrl\n    id\n    isArchived\n    isPrivate\n    licenseInfo {\n      __typename\n      name\n    }\n    mergeCommitAllowed\n    name\n    rebaseMergeAllowed\n    squashMergeAllowed\n    url\n  }\n}"
+    "query Repository($name: String!, $owner: String!) {\n  repository(name: $name, owner: $owner) {\n    __typename\n    labels(first: 10) {\n      __typename\n      nodes {\n        __typename\n        color\n        description\n        isDefault\n        name\n      }\n      totalCount\n    }\n    protectedBranches(first: 10) {\n      __typename\n      nodes {\n        __typename\n        hasDismissableStaleReviews\n        hasRequiredReviews\n        hasRequiredStatusChecks\n        hasRestrictedPushes\n        hasRestrictedReviewDismissals\n        hasStrictRequiredStatusChecks\n        isAdminEnforced\n        name\n        requiredStatusCheckContexts\n      }\n      totalCount\n    }\n    repositoryTopics(first: 10) {\n      __typename\n      nodes {\n        __typename\n        topic {\n          __typename\n          name\n        }\n      }\n      totalCount\n    }\n    codeOfConduct {\n      __typename\n      name\n    }\n    description\n    hasIssuesEnabled\n    hasWikiEnabled\n    homepageUrl\n    id\n    isArchived\n    isPrivate\n    licenseInfo {\n      __typename\n      name\n    }\n    mergeCommitAllowed\n    name\n    rebaseMergeAllowed\n    squashMergeAllowed\n    url\n  }\n}"
 
   public var name: String
   public var owner: String
@@ -311,6 +311,8 @@ public final class RepositoryQuery: GraphQLQuery {
           public static let selections: [GraphQLSelection] = [
             GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
             GraphQLField("color", type: .nonNull(.scalar(String.self))),
+            GraphQLField("description", type: .scalar(String.self)),
+            GraphQLField("isDefault", type: .nonNull(.scalar(Bool.self))),
             GraphQLField("name", type: .nonNull(.scalar(String.self))),
           ]
 
@@ -320,8 +322,8 @@ public final class RepositoryQuery: GraphQLQuery {
             self.snapshot = snapshot
           }
 
-          public init(color: String, name: String) {
-            self.init(snapshot: ["__typename": "Label", "color": color, "name": name])
+          public init(color: String, description: String? = nil, isDefault: Bool, name: String) {
+            self.init(snapshot: ["__typename": "Label", "color": color, "description": description, "isDefault": isDefault, "name": name])
           }
 
           public var __typename: String {
@@ -340,6 +342,26 @@ public final class RepositoryQuery: GraphQLQuery {
             }
             set {
               snapshot.updateValue(newValue, forKey: "color")
+            }
+          }
+
+          /// A brief description of this label.
+          public var description: String? {
+            get {
+              return snapshot["description"] as? String
+            }
+            set {
+              snapshot.updateValue(newValue, forKey: "description")
+            }
+          }
+
+          /// Indicates whether or not this is a default label.
+          public var isDefault: Bool {
+            get {
+              return snapshot["isDefault"]! as! Bool
+            }
+            set {
+              snapshot.updateValue(newValue, forKey: "isDefault")
             }
           }
 

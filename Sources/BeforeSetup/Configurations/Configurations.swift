@@ -25,6 +25,8 @@ struct Configurations {
 
     struct Label: Codable, AcceptableNonliteral {
         var color: String?
+        var description: String?
+        var isDefault: Bool?
         var name: String?
     }
 
