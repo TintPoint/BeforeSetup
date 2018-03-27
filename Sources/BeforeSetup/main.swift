@@ -85,16 +85,16 @@ do {
             }
         }
         switch totalMismatchCount {
-        case 0: Terminal.output("Congratulations! All \(totalRepositoryCount) repositories are passed.", color: .green)
-        default: Terminal.output("You have total \(totalMismatchCount) mismatches.", color: .red)
+        case 0: Terminal.output("Congratulations! All \(totalRepositoryCount) repositories are passed.\n", color: .green)
+        default: Terminal.output("You have total \(totalMismatchCount) mismatches.\n", color: .red)
         }
     } else {
         guard let owner = arguments.repositoryOwner else { throw GeneralError.missingRepositoryOwner }
         guard let name = arguments.repositoryName else { throw GeneralError.missingRepositoryName }
         let configurations = try Configurations(fileURL: arguments.configurationsURL)
         switch beforeSetup.checkRepository(name: name, owner: owner, configurations: configurations) {
-        case 0: Terminal.output("Congratulations! All tests are passed.\n", color: .green)
-        case let mismatchCount: Terminal.output("You have \(mismatchCount) mismatches.\n", color: .red)
+        case 0: Terminal.output("Congratulations! \(owner)/\(name) tests are passed.\n", color: .green)
+        case let mismatchCount: Terminal.output("\(owner)/\(name) has \(mismatchCount) mismatches.\n", color: .red)
         }
     }
 } catch {
