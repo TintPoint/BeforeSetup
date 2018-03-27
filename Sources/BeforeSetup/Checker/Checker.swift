@@ -10,17 +10,14 @@ class Checker {
         self.expectedRepository = expectedRepository
     }
 
-    func validate() {
+    func validate() -> Int {
         mismatchCount = 0
         // Special case: sort labels by name (currently GitHub doesn't provide sorting API for labels)
         currentRepository.labels?.nodes?.sort { first, second in
             return (first?.name ?? "") < (second?.name ?? "")
         }
         expect(currentRepository.jsonObject, equals: Mirror(reflecting: expectedRepository), recursiveLevel: 0)
-        switch mismatchCount {
-        case 0: Terminal.output("Congratulations! All tests are passed.", color: .green)
-        default: Terminal.output("You have \(mismatchCount) mismatch(es).", color: .red)
-        }
+        return mismatchCount
     }
 }
 
@@ -60,10 +57,10 @@ private extension Checker {
     
     func check(_ label: String, expect currentCount: Int, equals expectedCount: Int, outputIndentation numberOfSpaces: Int) {
         let matchOutput = """
-        \(expectedCount) item(s)
+        \(expectedCount) items
         """
         let mismatchOutput = """
-        should have \(expectedCount) item(s) but currently has \(currentCount) item(s)
+        should have \(expectedCount) items but currently has \(currentCount) items
         """
         check(label: label, outputIfMatch: matchOutput, outputIfMismatch: mismatchOutput, outputIndentation: numberOfSpaces) {
             currentCount == expectedCount
