@@ -1,4 +1,5 @@
 import Foundation
+import KeychainAccess
 
 private extension URL {
     var isDirectory: Bool {
@@ -42,6 +43,7 @@ class ProcessedArguments {
         } catch {
             repositories = []
         }
+        githubToken = Keychain(server: "https://github.com", protocolType: .https)["before-setup-token"]
     }
 }
 
@@ -58,6 +60,7 @@ class SupportedArguments {
         
         private let token: () throws -> Void = {
             processedArguments.githubToken = nextArgument
+            Keychain(server: "https://github.com", protocolType: .https)["before-setup-token"] = nextArgument
         }
         
         private let repo: () throws -> Void = {

@@ -41,13 +41,9 @@ class BeforeSetup {
 do {
     let arguments = try Terminal(processInfo: .processInfo).arguments
     guard let token = arguments.githubToken else { throw GeneralError.missingToken }
+    guard arguments.repositories.isEmpty == false else { throw GeneralError.missingRepository }
     let beforeSetup = try BeforeSetup(token: token)
-    var totalMismatchCount = 0
-    var totalPassedRepositoryCount = 0
-    var totalFailedRepositoryCount = 0
-    guard arguments.repositories.isEmpty == false else {
-        throw GeneralError.missingRepository
-    }
+    var totalMismatchCount = 0, totalPassedRepositoryCount = 0, totalFailedRepositoryCount = 0
     for (owner, name, configurationsURL) in arguments.repositories {
         let configurationsURL = configurationsURL ?? arguments.defaultConfigurationsURL
         let configurations = try Configurations(fileURL: configurationsURL)
@@ -65,8 +61,10 @@ do {
         }
     }
     switch totalMismatchCount {
-    case 0: Terminal.output("Congratulations! All \(totalPassedRepositoryCount) repositories passed all checks.", color: .green)
-    default: Terminal.output("\(totalPassedRepositoryCount) repositories passed all checks while \(totalFailedRepositoryCount) repositories failed with total \(totalMismatchCount) mismatches.", color: .red)
+    case 0:
+        Terminal.output("Congratulations! All \(totalPassedRepositoryCount) repositories passed all checks.", color: .green)
+    default:
+        Terminal.output("\(totalPassedRepositoryCount) repositories passed all checks while \(totalFailedRepositoryCount) repositories failed with total \(totalMismatchCount) mismatches.", color: .red)
     }
 } catch {
     Terminal.output(error.localizedDescription, to: .standardError, color: .red)
