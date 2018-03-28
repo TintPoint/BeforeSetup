@@ -1,7 +1,7 @@
 import Foundation
 import Apollo
 
-let beforeSetupVersion = "0.1"
+let beforeSetupVersion = "0.2"
 
 class BeforeSetup {
     private let configuration: URLSessionConfiguration
