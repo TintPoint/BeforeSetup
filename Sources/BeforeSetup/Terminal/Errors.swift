@@ -3,16 +3,14 @@ import Apollo
 
 enum GeneralError: LocalizedError {
     case missingToken
-    case missingRepositoryName
-    case missingRepositoryOwner
+    case missingRepository
     case argumentExpectsMoreParameters(String)
     case invalidInput(String)
     
     var errorDescription: String? {
         switch self {
         case .missingToken: return "Remote GitHub settings couldn't be retrieved because GitHub access token is missing."
-        case .missingRepositoryName: return "Remote GitHub settings couldn't be retrieved because repository name is missing."
-        case .missingRepositoryOwner: return "Remote GitHub settings couldn't be retrieved because repository owner is missing."
+        case .missingRepository: return "No repository to check."
         case .argumentExpectsMoreParameters(let argument): return "Argument \(argument) expects more parameters."
         case .invalidInput(let input): return "Input \(input) is invalid. Checkout `beforesetup --help` for more information."
         }

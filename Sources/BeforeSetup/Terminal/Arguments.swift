@@ -1,10 +1,48 @@
 import Foundation
 
+private extension URL {
+    var isDirectory: Bool {
+        if #available(macOS 10.11, *) {
+            return hasDirectoryPath
+        } else {
+            return (try? resourceValues(forKeys: [.isDirectoryKey]))?.isDirectory ?? false
+        }
+    }
+
+    var isFile: Bool {
+        return !isDirectory
+    }
+}
+
 class ProcessedArguments {
+    fileprivate(set) var defaultDirectoryURL: URL
+    fileprivate(set) var defaultConfigurationsURL: URL
+    fileprivate(set) var repositories: [(owner: String, name: String, configurationsURL: URL?)]
     fileprivate(set) var githubToken: String?
-    fileprivate(set) var repositoryOwner: String?
-    fileprivate(set) var repositoryName: String?
-    fileprivate(set) var configurationsURL: URL = URL(fileURLWithPath: ".beforesetup.yaml")
+
+    init() {
+        if #available(macOS 10.12, *) {
+            defaultDirectoryURL = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".beforesetup", isDirectory: true)
+        } else {
+            defaultDirectoryURL = URL(fileURLWithPath: "~/.beforesetup", isDirectory: true)
+        }
+        defaultConfigurationsURL = URL(fileURLWithPath: ".beforesetup.yaml")
+        do {
+            var directoryRepositories: [(owner: String, name: String, configurationsURL: URL?)] = []
+            let ownerDirectories = try FileManager.default.contentsOfDirectory(at: defaultDirectoryURL, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
+            for ownerURL in ownerDirectories where ownerURL.isDirectory {
+                let owner = ownerURL.lastPathComponent
+                let configurations = try FileManager.default.contentsOfDirectory(at: ownerURL, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
+                for configurationsURL in configurations where configurationsURL.isFile {
+                    let name = configurationsURL.deletingPathExtension().lastPathComponent
+                    directoryRepositories.append((owner: owner, name: name, configurationsURL: configurationsURL))
+                }
+            }
+            repositories = directoryRepositories
+        } catch {
+            repositories = []
+        }
+    }
 }
 
 class SupportedArguments {
@@ -25,12 +63,12 @@ class SupportedArguments {
         private let repo: () throws -> Void = {
             let tokens = nextArgument.split(separator: "/").map(String.init)
             guard tokens.count == 2 else { throw GeneralError.invalidInput(nextArgument) }
-            processedArguments.repositoryOwner = tokens[0]
-            processedArguments.repositoryName = tokens[1]
+            processedArguments.repositories.removeAll()
+            processedArguments.repositories.append((owner: tokens[0], name: tokens[1], configurationsURL: nil))
         }
         
         private let config: () throws -> Void = {
-            processedArguments.configurationsURL = URL(fileURLWithPath: nextArgument)
+            processedArguments.defaultConfigurationsURL = URL(fileURLWithPath: nextArgument)
         }
     }
     

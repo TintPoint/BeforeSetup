@@ -8,14 +8,6 @@ class BeforeSetup {
     private let client: ApolloClient
     private let urlString: String
 
-    static var directoryURL: URL {
-        if #available(macOS 10.12, *) {
-            return FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".beforesetup", isDirectory: true)
-        } else {
-            return URL(fileURLWithPath: "~/.beforesetup", isDirectory: true)
-        }
-    }
-
     init(token: String) throws {
         configuration = .default
         configuration.httpAdditionalHeaders = ["Authorization": "Bearer \(token)"]
@@ -46,56 +38,35 @@ class BeforeSetup {
     }
 }
 
-extension URL {
-    var isDirectory: Bool {
-        if #available(macOS 10.11, *) {
-            return hasDirectoryPath
-        } else {
-            return (try? resourceValues(forKeys: [.isDirectoryKey]))?.isDirectory ?? false
-        }
-    }
-
-    var isFile: Bool {
-        return !isDirectory
-    }
-}
-
 do {
     let arguments = try Terminal(processInfo: .processInfo).arguments
     guard let token = arguments.githubToken else { throw GeneralError.missingToken }
     let beforeSetup = try BeforeSetup(token: token)
-    let directoryURL = BeforeSetup.directoryURL
-    if FileManager.default.fileExists(atPath: directoryURL.path) && (arguments.repositoryOwner == nil || arguments.repositoryName == nil) {
-        var totalMismatchCount = 0
-        var totalRepositoryCount = 0
-        let ownerDirectories = try FileManager.default.contentsOfDirectory(at: directoryURL, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
-        for ownerURL in ownerDirectories where ownerURL.isDirectory {
-            let owner = ownerURL.lastPathComponent
-            let files = try FileManager.default.contentsOfDirectory(at: ownerURL, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
-            for fileURL in files where fileURL.isFile {
-                let name = fileURL.deletingPathExtension().lastPathComponent
-                let configurations = try Configurations(fileURL: fileURL)
-                let mismatchCount = beforeSetup.checkRepository(name: name, owner: owner, configurations: configurations)
-                totalMismatchCount += mismatchCount
-                totalRepositoryCount += 1
-                switch mismatchCount {
-                case 0: Terminal.output("\(owner)/\(name) tests are passed.\n", color: .green)
-                default: Terminal.output("\(owner)/\(name) has \(mismatchCount) mismatches.\n", color: .red)
-                }
-            }
+    var totalMismatchCount = 0
+    var totalPassedRepositoryCount = 0
+    var totalFailedRepositoryCount = 0
+    guard arguments.repositories.isEmpty == false else {
+        throw GeneralError.missingRepository
+    }
+    for (owner, name, configurationsURL) in arguments.repositories {
+        let configurationsURL = configurationsURL ?? arguments.defaultConfigurationsURL
+        let configurations = try Configurations(fileURL: configurationsURL)
+        let mismatchCount = beforeSetup.checkRepository(name: name, owner: owner, configurations: configurations)
+        totalMismatchCount += mismatchCount
+        switch mismatchCount {
+        case 0:
+            totalPassedRepositoryCount += 1
+            Terminal.output(configurationsURL.absoluteString)
+            Terminal.output("\(owner)/\(name) passed all checks.\n", color: .green)
+        default:
+            totalFailedRepositoryCount += 1
+            Terminal.output(configurationsURL.absoluteString)
+            Terminal.output("\(owner)/\(name) has \(mismatchCount) mismatches.\n", color: .red)
         }
-        switch totalMismatchCount {
-        case 0: Terminal.output("Congratulations! All \(totalRepositoryCount) repositories are passed.\n", color: .green)
-        default: Terminal.output("You have total \(totalMismatchCount) mismatches.\n", color: .red)
-        }
-    } else {
-        guard let owner = arguments.repositoryOwner else { throw GeneralError.missingRepositoryOwner }
-        guard let name = arguments.repositoryName else { throw GeneralError.missingRepositoryName }
-        let configurations = try Configurations(fileURL: arguments.configurationsURL)
-        switch beforeSetup.checkRepository(name: name, owner: owner, configurations: configurations) {
-        case 0: Terminal.output("Congratulations! \(owner)/\(name) tests are passed.\n", color: .green)
-        case let mismatchCount: Terminal.output("\(owner)/\(name) has \(mismatchCount) mismatches.\n", color: .red)
-        }
+    }
+    switch totalMismatchCount {
+    case 0: Terminal.output("Congratulations! All \(totalPassedRepositoryCount) repositories passed all checks.", color: .green)
+    default: Terminal.output("\(totalPassedRepositoryCount) repositories passed all checks while \(totalFailedRepositoryCount) repositories failed with total \(totalMismatchCount) mismatches.", color: .red)
     }
 } catch {
     Terminal.output(error.localizedDescription, to: .standardError, color: .red)
