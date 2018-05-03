@@ -12,12 +12,10 @@ macOS
 
 You can use `BeforeSetup` as a command line tool that you run manually, or as part of some other toolchain.
 
-#### Mint
-
-You can install `BeforeSetup` using [Mint](https://github.com/yonaskolb/mint).
+#### [Mint](https://github.com/yonaskolb/mint)
 
 ```bash
-> mint install TintPoint/BeforeSetup
+> mint install tintpoint/beforesetup
 ```
 
 #### Manually
@@ -31,37 +29,28 @@ You need to create a [GitHub Personal Access Token](https://help.github.com/arti
 Then you need to have a configurations file stored somewhere on your computer following [the YAML standard](http://yaml.org). For example:
 
 ```yaml
-labels:
-  - name: bug
-    color: d73a4a
-  - name: good first issue
-    color: 7057ff
-protectedBranches:
-  - hasDismissableStaleReviews: true
-    hasRequiredReviews: true
-    hasRequiredStatusChecks: true
-    hasRestrictedPushes: true
-    hasRestrictedReviewDismissals: true
-    hasStrictRequiredStatusChecks: true
-    isAdminEnforced: false
-    name: master
-    requiredStatusCheckContexts: []
 repositoryTopics:
   - topic:
       name: github
   - topic:
       name: configuration-management
+  - topic:
+      name: swift
+  - topic:
+      name: validation
 codeOfConduct:
   name: Contributor Covenant
 description: Validate Your GitHub Repository Settings
 hasIssuesEnabled: true
 hasWikiEnabled: false
-homepageUrl: http://www.tintpoint.com
+homepageUrl: https://www.tintpoint.com
 isArchived: false
 isPrivate: false
 licenseInfo:
   name: MIT License
-name: BeforeSetup
+mergeCommitAllowed: true
+rebaseMergeAllowed: true
+squashMergeAllowed: true
 url: https://github.com/TintPoint/BeforeSetup
 ```
 
@@ -74,50 +63,31 @@ Then you can run just type:
 The output will look like this:
 
 ```
-TintPoint/BeforeSetup
-☑ labels (5 item(s)):
-  ☑ color: "d73a4a"
-  ☑ name: "bug"
-  ☑ color: "a2eeef"
-  ☑ name: "enhancement"
-  ☑ color: "7057ff"
-  ☑ name: "good first issue"
-  ☑ color: "008672"
-  ☑ name: "help wanted"
-  ☑ color: "e4e669"
-  ☑ name: "high priority"
-☑ protectedBranches (1 item(s)):
-  ☑ hasDismissableStaleReviews: "true"
-  ☑ hasRequiredReviews: "true"
-  ☑ hasRequiredStatusChecks: "true"
-  ☑ hasRestrictedPushes: "true"
-  ☑ hasRestrictedReviewDismissals: "true"
-  ☑ hasStrictRequiredStatusChecks: "true"
-  ☑ isAdminEnforced: "false"
-  ☑ name: "master"
-  ☑ requiredStatusCheckContexts: "[]"
-☑ repositoryTopics (4 item(s)):
-  ☑ topic (1 item(s)):
+☑ repositoryTopics: 4 items
+  ☑ topic: 
     ☑ name: "github"
-  ☑ topic (1 item(s)):
+  ☑ topic: 
     ☑ name: "configuration-management"
-  ☑ topic (1 item(s)):
+  ☑ topic: 
     ☑ name: "swift"
-  ☑ topic (1 item(s)):
+  ☑ topic: 
     ☑ name: "validation"
-☑ codeOfConduct (1 item(s)):
+☑ codeOfConduct: 
   ☑ name: "Contributor Covenant"
 ☑ description: "Validate Your GitHub Repository Settings"
 ☑ hasIssuesEnabled: "true"
 ☑ hasWikiEnabled: "false"
-☑ homepageUrl: "http://www.tintpoint.com"
+☑ homepageUrl: "https://www.tintpoint.com"
 ☑ isArchived: "false"
 ☑ isPrivate: "false"
-☑ licenseInfo (1 item(s)):
+☑ licenseInfo: 
   ☑ name: "MIT License"
-☑ name: "BeforeSetup"
+☑ mergeCommitAllowed: "true"
+☑ rebaseMergeAllowed: "true"
+☑ squashMergeAllowed: "true"
 ☑ url: "https://github.com/TintPoint/BeforeSetup"
-Congratulations! All tests are passed.
+
+TintPoint/BeforeSetup passed all checks.
 ```
 
 If you have any question, just type:
