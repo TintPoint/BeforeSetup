@@ -4,7 +4,7 @@ class Terminal {
     let environment: [String: String]
     let userInputs: [String]
     let arguments: ProcessedArguments
-    
+
     init(processInfo: ProcessInfo) throws {
         environment = processInfo.environment
         userInputs = processInfo.arguments
@@ -17,7 +17,7 @@ private extension Terminal {
     func processArguments() throws {
         SupportedArguments.processedArguments = arguments
         let supportedArgumentsWithUserInput = Mirror(reflecting: SupportedArguments.withUserInput).children
-        for case (let label?, let function as SupportedArguments.Processor) in supportedArgumentsWithUserInput {
+        for case let (label?, function as SupportedArguments.Processor) in supportedArgumentsWithUserInput {
             if let index = userInputs.index(of: "--\(label.lowercased())") {
                 if userInputs.indices.contains(index + 1) {
                     SupportedArguments.nextArgument = userInputs[index + 1]
@@ -31,7 +31,7 @@ private extension Terminal {
             }
         }
         let supportedArgumentsWithoutUserInput = Mirror(reflecting: SupportedArguments.withoutUserInput).children
-        for case (let label?, let function as SupportedArguments.Processor) in supportedArgumentsWithoutUserInput where userInputs.contains("--\(label.lowercased())") {
+        for case let (label?, function as SupportedArguments.Processor) in supportedArgumentsWithoutUserInput where userInputs.contains("--\(label.lowercased())") {
             try function()
         }
         SupportedArguments.processedArguments = nil

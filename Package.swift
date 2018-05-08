@@ -8,12 +8,12 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/apollographql/apollo-ios", from: "0.8.0"),
         .package(url: "https://github.com/jpsim/yams", from: "0.7.0"),
-        .package(url: "https://github.com/kishikawakatsumi/keychainaccess", from: "3.1.0")
+        .package(url: "https://github.com/kishikawakatsumi/keychainaccess", from: "3.1.0"),
     ],
     targets: [
         .target(
             name: "BeforeSetup",
             dependencies: ["Apollo", "Yams", "KeychainAccess"]
-        )
+        ),
     ]
 )

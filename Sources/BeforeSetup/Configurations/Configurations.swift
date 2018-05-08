@@ -1,7 +1,7 @@
 import Foundation
 import Yams
 
-protocol AcceptableNonliteral { }
+protocol AcceptableNonliteral {}
 
 struct Configurations {
     struct Repository: Codable {

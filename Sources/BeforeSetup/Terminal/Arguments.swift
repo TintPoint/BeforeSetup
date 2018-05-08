@@ -61,10 +61,10 @@ class SupportedArguments {
     // Use global variables to workaround Swift's readwrite reflection limitation
     static var processedArguments: ProcessedArguments!
     static var nextArgument: String!
-    
+
     class WithUserInput {
-        fileprivate init() { }
-        
+        fileprivate init() {}
+
         private let token: Processor = {
             processedArguments.githubToken = nextArgument
             Keychain(server: "https://github.com", protocolType: .https)["before-setup-token"] = nextArgument
@@ -86,10 +86,10 @@ class SupportedArguments {
             processedArguments.repositories.append((owner: tokens[0], name: tokens[1], configurationsURL: nil))
         }
     }
-    
+
     class WithoutUserInput {
-        fileprivate init() { }
-        
+        fileprivate init() {}
+
         private let help: Processor = {
             Terminal.output(
                 """
@@ -128,7 +128,7 @@ class SupportedArguments {
             )
             exit(0)
         }
-        
+
         private let version: Processor = {
             Terminal.output(
                 """

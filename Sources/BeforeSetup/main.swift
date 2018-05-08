@@ -1,5 +1,5 @@
-import Foundation
 import Apollo
+import Foundation
 
 let beforeSetupVersion = "0.2"
 

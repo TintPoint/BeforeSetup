@@ -4,7 +4,7 @@ class Checker {
     private var currentRepository: RepositoryQuery.Data.Repository
     private let expectedRepository: Configurations.Repository
     private var mismatchCount: Int = 0
-    
+
     init(expect currentRepository: RepositoryQuery.Data.Repository, equals expectedRepository: Configurations.Repository) {
         self.currentRepository = currentRepository
         self.expectedRepository = expectedRepository
@@ -14,7 +14,7 @@ class Checker {
         mismatchCount = 0
         // Special case: sort labels by name (currently GitHub doesn't provide sorting API for labels)
         currentRepository.labels?.nodes?.sort { first, second in
-            return (first?.name ?? "") < (second?.name ?? "")
+            (first?.name ?? "") < (second?.name ?? "")
         }
         expect(currentRepository.jsonObject, equals: Mirror(reflecting: expectedRepository), recursiveLevel: 0)
         return mismatchCount
@@ -30,7 +30,7 @@ private extension Checker {
             mismatchCount += 1
         }
     }
-    
+
     func check(_ label: String, expect currentValue: AnyHashable?, equals expectedValue: AnyHashable, outputIndentation numberOfSpaces: Int) {
         let matchOutput = """
         "\(expectedValue)"
@@ -42,7 +42,7 @@ private extension Checker {
             currentValue == expectedValue
         }
     }
-    
+
     func check(_ label: String, expect currentValue: [AnyHashable]?, equals expectedValue: [AnyHashable], outputIndentation numberOfSpaces: Int) {
         let matchOutput = """
         "\(expectedValue)"
@@ -54,7 +54,7 @@ private extension Checker {
             expectedValue.count == currentValue?.count && zip(expectedValue, currentValue ?? []).reduce(true, { $0 && $1.0 == $1.1 })
         }
     }
-    
+
     func check(_ label: String, expect currentCount: Int, equals expectedCount: Int, outputIndentation numberOfSpaces: Int) {
         let matchOutput = """
         \(expectedCount) items
@@ -66,10 +66,10 @@ private extension Checker {
             currentCount == expectedCount
         }
     }
-    
+
     func expect(_ current: JSONObject, equals expected: Mirror, recursiveLevel: Int) {
         let numberOfSpaces = recursiveLevel * 2
-        for case (let label?, Optional<Any>.some(let value)) in expected.children {
+        for case let (label?, Optional<Any>.some(value)) in expected.children {
             switch (value, current[label]) {
             case let (expectedValues, currentValues) as ([AcceptableNonliteral], JSONObject):
                 let currentValues = currentValues["nodes"] as? [JSONObject] ?? []
