@@ -24,9 +24,9 @@ You can download the binary file [here](https://github.com/TintPoint/BeforeSetup
 
 ### Usage
 
-You need to create a [GitHub Personal Access Token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/) with `repo` permission, which will allow `BeforeSetup` to access your repositories.
+You need to create a [GitHub Personal Access Token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/) with `repo` permission, which allows `BeforeSetup` to access your repositories.
 
-Then you need to have a configurations file stored somewhere on your computer following [the YAML standard](http://yaml.org). For example:
+Then you need to have a config file stored somewhere on your computer following [the YAML standard](http://yaml.org). For example:
 
 ```yaml
 repositoryTopics:
@@ -54,7 +54,7 @@ squashMergeAllowed: true
 url: https://github.com/TintPoint/BeforeSetup
 ```
 
-Then you can run just type:
+Finally you can just type:
 
 ```bash
 > beforesetup --token <GitHubToken> --repo <Owner>/<Name> --config <FilePath>
@@ -90,7 +90,7 @@ The output will look like this:
 TintPoint/BeforeSetup passed all checks.
 ```
 
-If you have any question, just type:
+If you have any question, use:
 
 ```bash
 > beforesetup --help
