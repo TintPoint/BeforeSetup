@@ -24,7 +24,7 @@ You can download the binary file [here](https://github.com/TintPoint/BeforeSetup
 
 ### Usage
 
-You need to create a [GitHub Personal Access Token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/) with `repo` permission, which allows `BeforeSetup` to access your repositories.
+You need to create a [GitHub Personal Access Token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/) with `repo:status` permission, which allows `BeforeSetup` to access your repositories.
 
 Then you need to have a config file stored somewhere on your computer following [the YAML standard](http://yaml.org). For example:
 
