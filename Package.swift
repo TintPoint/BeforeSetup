@@ -1,19 +1,18 @@
-// swift-tools-version:4.0
-// The swift-tools-version declares the minimum version of Swift required to build this package.
+// swift-tools-version:4.2
 
 import PackageDescription
 
 let package = Package(
     name: "BeforeSetup",
     dependencies: [
-        .package(url: "https://github.com/apollographql/apollo-ios", from: "0.8.0"),
-        .package(url: "https://github.com/jpsim/yams", from: "0.7.0"),
+        .package(url: "https://github.com/apollographql/apollo-ios", from: "0.9.0"),
+        .package(url: "https://github.com/jpsim/yams", from: "1.0.0"),
         .package(url: "https://github.com/kishikawakatsumi/keychainaccess", from: "3.1.0"),
     ],
     targets: [
-        .target(
-            name: "BeforeSetup",
-            dependencies: ["Apollo", "Yams", "KeychainAccess"]
-        ),
+        .target(name: "BeforeSetup", dependencies: ["Apollo", "Yams", "KeychainAccess"]),
+    ],
+    swiftLanguageVersions: [
+        .v4_2,
     ]
 )

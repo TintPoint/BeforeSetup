@@ -64,15 +64,15 @@ The output will look like this:
 
 ```
 ☑ repositoryTopics: 4 items
-  ☑ topic: 
+  ☑ topic:
     ☑ name: "github"
-  ☑ topic: 
+  ☑ topic:
     ☑ name: "configuration-management"
-  ☑ topic: 
+  ☑ topic:
     ☑ name: "swift"
-  ☑ topic: 
+  ☑ topic:
     ☑ name: "validation"
-☑ codeOfConduct: 
+☑ codeOfConduct:
   ☑ name: "Contributor Covenant"
 ☑ description: "Validate Your GitHub Repository Settings"
 ☑ hasIssuesEnabled: "true"
@@ -80,7 +80,7 @@ The output will look like this:
 ☑ homepageUrl: "https://www.tintpoint.com"
 ☑ isArchived: "false"
 ☑ isPrivate: "false"
-☑ licenseInfo: 
+☑ licenseInfo:
   ☑ name: "MIT License"
 ☑ mergeCommitAllowed: "true"
 ☑ rebaseMergeAllowed: "true"
@@ -107,7 +107,7 @@ Swift 4+
 Make sure you have the latest version of [Xcode](https://developer.apple.com/xcode/) and [Yarn](https://yarnpkg.com) installed.
 
 ```bash
-> yarn global add apollo-codegen
-> apollo-codegen introspect-schema "https://api.github.com/graphql" --header "Authorization: Bearer <token>"
-> apollo-codegen generate **.graphql --output "Sources/BeforeSetup/GraphQL/API.swift"
+> yarn global add apollo
+> apollo schema:download --endpoint="https://api.github.com/graphql" --header="Authorization: Bearer <token>"
+> apollo codegen:generate "Sources/BeforeSetup/GraphQL/API.swift" --schema="schema.json"
 ```
