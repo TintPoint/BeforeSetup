@@ -51,7 +51,7 @@ private extension Checker {
         should be "\(expectedValue)" but currently is "\(currentValue ?? [])"
         """
         check(label: label, outputIfMatch: matchOutput, outputIfMismatch: mismatchOutput, outputIndentation: numberOfSpaces) {
-            expectedValue.count == currentValue?.count && zip(expectedValue, currentValue ?? []).reduce(true, { $0 && $1.0 == $1.1 })
+            expectedValue == currentValue
         }
     }
 
@@ -82,9 +82,9 @@ private extension Checker {
                 let expectedValue = Mirror(reflecting: expectedValue)
                 Terminal.output(indentation: numberOfSpaces, isMatch: true, label: label, text: "")
                 expect(currentValue, equals: expectedValue, recursiveLevel: recursiveLevel + 1)
-            case let (expectedValue, currentValue) as ([AnyHashable], [AnyHashable]?):
-                check(label, expect: currentValue, equals: expectedValue, outputIndentation: numberOfSpaces)
             case let (expectedValue, currentValue) as (AnyHashable, AnyHashable?):
+                check(label, expect: currentValue, equals: expectedValue, outputIndentation: numberOfSpaces)
+            case let (expectedValue, currentValue) as ([AnyHashable], [AnyHashable]?):
                 check(label, expect: currentValue, equals: expectedValue, outputIndentation: numberOfSpaces)
             case let (expectedValue, currentValue):
                 let expectedValue = String(describing: expectedValue)
