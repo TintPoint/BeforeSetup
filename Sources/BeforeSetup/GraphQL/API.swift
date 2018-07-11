@@ -3,7 +3,7 @@
 import Apollo
 
 public final class RepositoryQuery: GraphQLQuery {
-  public static let operationString =
+  public let operationDefinition =
     "query Repository($name: String!, $owner: String!) {\n  repository(name: $name, owner: $owner) {\n    __typename\n    labels(first: 10) {\n      __typename\n      nodes {\n        __typename\n        color\n        description\n        isDefault\n        name\n      }\n      totalCount\n    }\n    protectedBranches(first: 10) {\n      __typename\n      nodes {\n        __typename\n        hasDismissableStaleReviews\n        hasRequiredReviews\n        hasRequiredStatusChecks\n        hasRestrictedPushes\n        hasRestrictedReviewDismissals\n        hasStrictRequiredStatusChecks\n        isAdminEnforced\n        name\n        requiredStatusCheckContexts\n      }\n      totalCount\n    }\n    repositoryTopics(first: 10) {\n      __typename\n      nodes {\n        __typename\n        topic {\n          __typename\n          name\n        }\n      }\n      totalCount\n    }\n    codeOfConduct {\n      __typename\n      name\n    }\n    description\n    hasIssuesEnabled\n    hasWikiEnabled\n    homepageUrl\n    id\n    isArchived\n    isPrivate\n    licenseInfo {\n      __typename\n      name\n    }\n    mergeCommitAllowed\n    name\n    rebaseMergeAllowed\n    squashMergeAllowed\n    url\n  }\n}"
 
   public var name: String
@@ -25,23 +25,23 @@ public final class RepositoryQuery: GraphQLQuery {
       GraphQLField("repository", arguments: ["name": GraphQLVariable("name"), "owner": GraphQLVariable("owner")], type: .object(Repository.selections)),
     ]
 
-    public var snapshot: Snapshot
+    public private(set) var resultMap: ResultMap
 
-    public init(snapshot: Snapshot) {
-      self.snapshot = snapshot
+    public init(unsafeResultMap: ResultMap) {
+      self.resultMap = unsafeResultMap
     }
 
     public init(repository: Repository? = nil) {
-      self.init(snapshot: ["__typename": "Query", "repository": repository.flatMap { $0.snapshot }])
+      self.init(unsafeResultMap: ["__typename": "Query", "repository": repository.flatMap { (value: Repository) -> ResultMap in value.resultMap }])
     }
 
     /// Lookup a given repository by the owner and repository name.
     public var repository: Repository? {
       get {
-        return (snapshot["repository"] as? Snapshot).flatMap { Repository(snapshot: $0) }
+        return (resultMap["repository"] as? ResultMap).flatMap { Repository(unsafeResultMap: $0) }
       }
       set {
-        snapshot.updateValue(newValue?.snapshot, forKey: "repository")
+        resultMap.updateValue(newValue?.resultMap, forKey: "repository")
       }
     }
 
@@ -69,191 +69,191 @@ public final class RepositoryQuery: GraphQLQuery {
         GraphQLField("url", type: .nonNull(.scalar(String.self))),
       ]
 
-      public var snapshot: Snapshot
+      public private(set) var resultMap: ResultMap
 
-      public init(snapshot: Snapshot) {
-        self.snapshot = snapshot
+      public init(unsafeResultMap: ResultMap) {
+        self.resultMap = unsafeResultMap
       }
 
       public init(labels: Label? = nil, protectedBranches: ProtectedBranch, repositoryTopics: RepositoryTopic, codeOfConduct: CodeOfConduct? = nil, description: String? = nil, hasIssuesEnabled: Bool, hasWikiEnabled: Bool, homepageUrl: String? = nil, id: GraphQLID, isArchived: Bool, isPrivate: Bool, licenseInfo: LicenseInfo? = nil, mergeCommitAllowed: Bool, name: String, rebaseMergeAllowed: Bool, squashMergeAllowed: Bool, url: String) {
-        self.init(snapshot: ["__typename": "Repository", "labels": labels.flatMap { $0.snapshot }, "protectedBranches": protectedBranches.snapshot, "repositoryTopics": repositoryTopics.snapshot, "codeOfConduct": codeOfConduct.flatMap { $0.snapshot }, "description": description, "hasIssuesEnabled": hasIssuesEnabled, "hasWikiEnabled": hasWikiEnabled, "homepageUrl": homepageUrl, "id": id, "isArchived": isArchived, "isPrivate": isPrivate, "licenseInfo": licenseInfo.flatMap { $0.snapshot }, "mergeCommitAllowed": mergeCommitAllowed, "name": name, "rebaseMergeAllowed": rebaseMergeAllowed, "squashMergeAllowed": squashMergeAllowed, "url": url])
+        self.init(unsafeResultMap: ["__typename": "Repository", "labels": labels.flatMap { (value: Label) -> ResultMap in value.resultMap }, "protectedBranches": protectedBranches.resultMap, "repositoryTopics": repositoryTopics.resultMap, "codeOfConduct": codeOfConduct.flatMap { (value: CodeOfConduct) -> ResultMap in value.resultMap }, "description": description, "hasIssuesEnabled": hasIssuesEnabled, "hasWikiEnabled": hasWikiEnabled, "homepageUrl": homepageUrl, "id": id, "isArchived": isArchived, "isPrivate": isPrivate, "licenseInfo": licenseInfo.flatMap { (value: LicenseInfo) -> ResultMap in value.resultMap }, "mergeCommitAllowed": mergeCommitAllowed, "name": name, "rebaseMergeAllowed": rebaseMergeAllowed, "squashMergeAllowed": squashMergeAllowed, "url": url])
       }
 
       public var __typename: String {
         get {
-          return snapshot["__typename"]! as! String
+          return resultMap["__typename"]! as! String
         }
         set {
-          snapshot.updateValue(newValue, forKey: "__typename")
+          resultMap.updateValue(newValue, forKey: "__typename")
         }
       }
 
       /// A list of labels associated with the repository.
       public var labels: Label? {
         get {
-          return (snapshot["labels"] as? Snapshot).flatMap { Label(snapshot: $0) }
+          return (resultMap["labels"] as? ResultMap).flatMap { Label(unsafeResultMap: $0) }
         }
         set {
-          snapshot.updateValue(newValue?.snapshot, forKey: "labels")
+          resultMap.updateValue(newValue?.resultMap, forKey: "labels")
         }
       }
 
       /// A list of protected branches that are on this repository.
       public var protectedBranches: ProtectedBranch {
         get {
-          return ProtectedBranch(snapshot: snapshot["protectedBranches"]! as! Snapshot)
+          return ProtectedBranch(unsafeResultMap: resultMap["protectedBranches"]! as! ResultMap)
         }
         set {
-          snapshot.updateValue(newValue.snapshot, forKey: "protectedBranches")
+          resultMap.updateValue(newValue.resultMap, forKey: "protectedBranches")
         }
       }
 
       /// A list of applied repository-topic associations for this repository.
       public var repositoryTopics: RepositoryTopic {
         get {
-          return RepositoryTopic(snapshot: snapshot["repositoryTopics"]! as! Snapshot)
+          return RepositoryTopic(unsafeResultMap: resultMap["repositoryTopics"]! as! ResultMap)
         }
         set {
-          snapshot.updateValue(newValue.snapshot, forKey: "repositoryTopics")
+          resultMap.updateValue(newValue.resultMap, forKey: "repositoryTopics")
         }
       }
 
       /// Returns the code of conduct for this repository
       public var codeOfConduct: CodeOfConduct? {
         get {
-          return (snapshot["codeOfConduct"] as? Snapshot).flatMap { CodeOfConduct(snapshot: $0) }
+          return (resultMap["codeOfConduct"] as? ResultMap).flatMap { CodeOfConduct(unsafeResultMap: $0) }
         }
         set {
-          snapshot.updateValue(newValue?.snapshot, forKey: "codeOfConduct")
+          resultMap.updateValue(newValue?.resultMap, forKey: "codeOfConduct")
         }
       }
 
       /// The description of the repository.
       public var description: String? {
         get {
-          return snapshot["description"] as? String
+          return resultMap["description"] as? String
         }
         set {
-          snapshot.updateValue(newValue, forKey: "description")
+          resultMap.updateValue(newValue, forKey: "description")
         }
       }
 
       /// Indicates if the repository has issues feature enabled.
       public var hasIssuesEnabled: Bool {
         get {
-          return snapshot["hasIssuesEnabled"]! as! Bool
+          return resultMap["hasIssuesEnabled"]! as! Bool
         }
         set {
-          snapshot.updateValue(newValue, forKey: "hasIssuesEnabled")
+          resultMap.updateValue(newValue, forKey: "hasIssuesEnabled")
         }
       }
 
       /// Indicates if the repository has wiki feature enabled.
       public var hasWikiEnabled: Bool {
         get {
-          return snapshot["hasWikiEnabled"]! as! Bool
+          return resultMap["hasWikiEnabled"]! as! Bool
         }
         set {
-          snapshot.updateValue(newValue, forKey: "hasWikiEnabled")
+          resultMap.updateValue(newValue, forKey: "hasWikiEnabled")
         }
       }
 
       /// The repository's URL.
       public var homepageUrl: String? {
         get {
-          return snapshot["homepageUrl"] as? String
+          return resultMap["homepageUrl"] as? String
         }
         set {
-          snapshot.updateValue(newValue, forKey: "homepageUrl")
+          resultMap.updateValue(newValue, forKey: "homepageUrl")
         }
       }
 
       public var id: GraphQLID {
         get {
-          return snapshot["id"]! as! GraphQLID
+          return resultMap["id"]! as! GraphQLID
         }
         set {
-          snapshot.updateValue(newValue, forKey: "id")
+          resultMap.updateValue(newValue, forKey: "id")
         }
       }
 
       /// Indicates if the repository is unmaintained.
       public var isArchived: Bool {
         get {
-          return snapshot["isArchived"]! as! Bool
+          return resultMap["isArchived"]! as! Bool
         }
         set {
-          snapshot.updateValue(newValue, forKey: "isArchived")
+          resultMap.updateValue(newValue, forKey: "isArchived")
         }
       }
 
       /// Identifies if the repository is private.
       public var isPrivate: Bool {
         get {
-          return snapshot["isPrivate"]! as! Bool
+          return resultMap["isPrivate"]! as! Bool
         }
         set {
-          snapshot.updateValue(newValue, forKey: "isPrivate")
+          resultMap.updateValue(newValue, forKey: "isPrivate")
         }
       }
 
       /// The license associated with the repository
       public var licenseInfo: LicenseInfo? {
         get {
-          return (snapshot["licenseInfo"] as? Snapshot).flatMap { LicenseInfo(snapshot: $0) }
+          return (resultMap["licenseInfo"] as? ResultMap).flatMap { LicenseInfo(unsafeResultMap: $0) }
         }
         set {
-          snapshot.updateValue(newValue?.snapshot, forKey: "licenseInfo")
+          resultMap.updateValue(newValue?.resultMap, forKey: "licenseInfo")
         }
       }
 
       /// Whether or not PRs are merged with a merge commit on this repository.
       public var mergeCommitAllowed: Bool {
         get {
-          return snapshot["mergeCommitAllowed"]! as! Bool
+          return resultMap["mergeCommitAllowed"]! as! Bool
         }
         set {
-          snapshot.updateValue(newValue, forKey: "mergeCommitAllowed")
+          resultMap.updateValue(newValue, forKey: "mergeCommitAllowed")
         }
       }
 
       /// The name of the repository.
       public var name: String {
         get {
-          return snapshot["name"]! as! String
+          return resultMap["name"]! as! String
         }
         set {
-          snapshot.updateValue(newValue, forKey: "name")
+          resultMap.updateValue(newValue, forKey: "name")
         }
       }
 
       /// Whether or not rebase-merging is enabled on this repository.
       public var rebaseMergeAllowed: Bool {
         get {
-          return snapshot["rebaseMergeAllowed"]! as! Bool
+          return resultMap["rebaseMergeAllowed"]! as! Bool
         }
         set {
-          snapshot.updateValue(newValue, forKey: "rebaseMergeAllowed")
+          resultMap.updateValue(newValue, forKey: "rebaseMergeAllowed")
         }
       }
 
       /// Whether or not squash-merging is enabled on this repository.
       public var squashMergeAllowed: Bool {
         get {
-          return snapshot["squashMergeAllowed"]! as! Bool
+          return resultMap["squashMergeAllowed"]! as! Bool
         }
         set {
-          snapshot.updateValue(newValue, forKey: "squashMergeAllowed")
+          resultMap.updateValue(newValue, forKey: "squashMergeAllowed")
         }
       }
 
       /// The HTTP URL for this repository
       public var url: String {
         get {
-          return snapshot["url"]! as! String
+          return resultMap["url"]! as! String
         }
         set {
-          snapshot.updateValue(newValue, forKey: "url")
+          resultMap.updateValue(newValue, forKey: "url")
         }
       }
 
@@ -266,42 +266,42 @@ public final class RepositoryQuery: GraphQLQuery {
           GraphQLField("totalCount", type: .nonNull(.scalar(Int.self))),
         ]
 
-        public var snapshot: Snapshot
+        public private(set) var resultMap: ResultMap
 
-        public init(snapshot: Snapshot) {
-          self.snapshot = snapshot
+        public init(unsafeResultMap: ResultMap) {
+          self.resultMap = unsafeResultMap
         }
 
         public init(nodes: [Node?]? = nil, totalCount: Int) {
-          self.init(snapshot: ["__typename": "LabelConnection", "nodes": nodes.flatMap { $0.map { $0.flatMap { $0.snapshot } } }, "totalCount": totalCount])
+          self.init(unsafeResultMap: ["__typename": "LabelConnection", "nodes": nodes.flatMap { (value: [Node?]) -> [ResultMap?] in value.map { (value: Node?) -> ResultMap? in value.flatMap { (value: Node) -> ResultMap in value.resultMap } } }, "totalCount": totalCount])
         }
 
         public var __typename: String {
           get {
-            return snapshot["__typename"]! as! String
+            return resultMap["__typename"]! as! String
           }
           set {
-            snapshot.updateValue(newValue, forKey: "__typename")
+            resultMap.updateValue(newValue, forKey: "__typename")
           }
         }
 
         /// A list of nodes.
         public var nodes: [Node?]? {
           get {
-            return (snapshot["nodes"] as? [Snapshot?]).flatMap { $0.map { $0.flatMap { Node(snapshot: $0) } } }
+            return (resultMap["nodes"] as? [ResultMap?]).flatMap { (value: [ResultMap?]) -> [Node?] in value.map { (value: ResultMap?) -> Node? in value.flatMap { (value: ResultMap) -> Node in Node(unsafeResultMap: value) } } }
           }
           set {
-            snapshot.updateValue(newValue.flatMap { $0.map { $0.flatMap { $0.snapshot } } }, forKey: "nodes")
+            resultMap.updateValue(newValue.flatMap { (value: [Node?]) -> [ResultMap?] in value.map { (value: Node?) -> ResultMap? in value.flatMap { (value: Node) -> ResultMap in value.resultMap } } }, forKey: "nodes")
           }
         }
 
         /// Identifies the total count of items in the connection.
         public var totalCount: Int {
           get {
-            return snapshot["totalCount"]! as! Int
+            return resultMap["totalCount"]! as! Int
           }
           set {
-            snapshot.updateValue(newValue, forKey: "totalCount")
+            resultMap.updateValue(newValue, forKey: "totalCount")
           }
         }
 
@@ -316,62 +316,62 @@ public final class RepositoryQuery: GraphQLQuery {
             GraphQLField("name", type: .nonNull(.scalar(String.self))),
           ]
 
-          public var snapshot: Snapshot
+          public private(set) var resultMap: ResultMap
 
-          public init(snapshot: Snapshot) {
-            self.snapshot = snapshot
+          public init(unsafeResultMap: ResultMap) {
+            self.resultMap = unsafeResultMap
           }
 
           public init(color: String, description: String? = nil, isDefault: Bool, name: String) {
-            self.init(snapshot: ["__typename": "Label", "color": color, "description": description, "isDefault": isDefault, "name": name])
+            self.init(unsafeResultMap: ["__typename": "Label", "color": color, "description": description, "isDefault": isDefault, "name": name])
           }
 
           public var __typename: String {
             get {
-              return snapshot["__typename"]! as! String
+              return resultMap["__typename"]! as! String
             }
             set {
-              snapshot.updateValue(newValue, forKey: "__typename")
+              resultMap.updateValue(newValue, forKey: "__typename")
             }
           }
 
           /// Identifies the label color.
           public var color: String {
             get {
-              return snapshot["color"]! as! String
+              return resultMap["color"]! as! String
             }
             set {
-              snapshot.updateValue(newValue, forKey: "color")
+              resultMap.updateValue(newValue, forKey: "color")
             }
           }
 
           /// A brief description of this label.
           public var description: String? {
             get {
-              return snapshot["description"] as? String
+              return resultMap["description"] as? String
             }
             set {
-              snapshot.updateValue(newValue, forKey: "description")
+              resultMap.updateValue(newValue, forKey: "description")
             }
           }
 
           /// Indicates whether or not this is a default label.
           public var isDefault: Bool {
             get {
-              return snapshot["isDefault"]! as! Bool
+              return resultMap["isDefault"]! as! Bool
             }
             set {
-              snapshot.updateValue(newValue, forKey: "isDefault")
+              resultMap.updateValue(newValue, forKey: "isDefault")
             }
           }
 
           /// Identifies the label name.
           public var name: String {
             get {
-              return snapshot["name"]! as! String
+              return resultMap["name"]! as! String
             }
             set {
-              snapshot.updateValue(newValue, forKey: "name")
+              resultMap.updateValue(newValue, forKey: "name")
             }
           }
         }
@@ -386,42 +386,42 @@ public final class RepositoryQuery: GraphQLQuery {
           GraphQLField("totalCount", type: .nonNull(.scalar(Int.self))),
         ]
 
-        public var snapshot: Snapshot
+        public private(set) var resultMap: ResultMap
 
-        public init(snapshot: Snapshot) {
-          self.snapshot = snapshot
+        public init(unsafeResultMap: ResultMap) {
+          self.resultMap = unsafeResultMap
         }
 
         public init(nodes: [Node?]? = nil, totalCount: Int) {
-          self.init(snapshot: ["__typename": "ProtectedBranchConnection", "nodes": nodes.flatMap { $0.map { $0.flatMap { $0.snapshot } } }, "totalCount": totalCount])
+          self.init(unsafeResultMap: ["__typename": "ProtectedBranchConnection", "nodes": nodes.flatMap { (value: [Node?]) -> [ResultMap?] in value.map { (value: Node?) -> ResultMap? in value.flatMap { (value: Node) -> ResultMap in value.resultMap } } }, "totalCount": totalCount])
         }
 
         public var __typename: String {
           get {
-            return snapshot["__typename"]! as! String
+            return resultMap["__typename"]! as! String
           }
           set {
-            snapshot.updateValue(newValue, forKey: "__typename")
+            resultMap.updateValue(newValue, forKey: "__typename")
           }
         }
 
         /// A list of nodes.
         public var nodes: [Node?]? {
           get {
-            return (snapshot["nodes"] as? [Snapshot?]).flatMap { $0.map { $0.flatMap { Node(snapshot: $0) } } }
+            return (resultMap["nodes"] as? [ResultMap?]).flatMap { (value: [ResultMap?]) -> [Node?] in value.map { (value: ResultMap?) -> Node? in value.flatMap { (value: ResultMap) -> Node in Node(unsafeResultMap: value) } } }
           }
           set {
-            snapshot.updateValue(newValue.flatMap { $0.map { $0.flatMap { $0.snapshot } } }, forKey: "nodes")
+            resultMap.updateValue(newValue.flatMap { (value: [Node?]) -> [ResultMap?] in value.map { (value: Node?) -> ResultMap? in value.flatMap { (value: Node) -> ResultMap in value.resultMap } } }, forKey: "nodes")
           }
         }
 
         /// Identifies the total count of items in the connection.
         public var totalCount: Int {
           get {
-            return snapshot["totalCount"]! as! Int
+            return resultMap["totalCount"]! as! Int
           }
           set {
-            snapshot.updateValue(newValue, forKey: "totalCount")
+            resultMap.updateValue(newValue, forKey: "totalCount")
           }
         }
 
@@ -441,112 +441,112 @@ public final class RepositoryQuery: GraphQLQuery {
             GraphQLField("requiredStatusCheckContexts", type: .list(.scalar(String.self))),
           ]
 
-          public var snapshot: Snapshot
+          public private(set) var resultMap: ResultMap
 
-          public init(snapshot: Snapshot) {
-            self.snapshot = snapshot
+          public init(unsafeResultMap: ResultMap) {
+            self.resultMap = unsafeResultMap
           }
 
           public init(hasDismissableStaleReviews: Bool, hasRequiredReviews: Bool, hasRequiredStatusChecks: Bool, hasRestrictedPushes: Bool, hasRestrictedReviewDismissals: Bool, hasStrictRequiredStatusChecks: Bool, isAdminEnforced: Bool, name: String, requiredStatusCheckContexts: [String?]? = nil) {
-            self.init(snapshot: ["__typename": "ProtectedBranch", "hasDismissableStaleReviews": hasDismissableStaleReviews, "hasRequiredReviews": hasRequiredReviews, "hasRequiredStatusChecks": hasRequiredStatusChecks, "hasRestrictedPushes": hasRestrictedPushes, "hasRestrictedReviewDismissals": hasRestrictedReviewDismissals, "hasStrictRequiredStatusChecks": hasStrictRequiredStatusChecks, "isAdminEnforced": isAdminEnforced, "name": name, "requiredStatusCheckContexts": requiredStatusCheckContexts])
+            self.init(unsafeResultMap: ["__typename": "ProtectedBranch", "hasDismissableStaleReviews": hasDismissableStaleReviews, "hasRequiredReviews": hasRequiredReviews, "hasRequiredStatusChecks": hasRequiredStatusChecks, "hasRestrictedPushes": hasRestrictedPushes, "hasRestrictedReviewDismissals": hasRestrictedReviewDismissals, "hasStrictRequiredStatusChecks": hasStrictRequiredStatusChecks, "isAdminEnforced": isAdminEnforced, "name": name, "requiredStatusCheckContexts": requiredStatusCheckContexts])
           }
 
           public var __typename: String {
             get {
-              return snapshot["__typename"]! as! String
+              return resultMap["__typename"]! as! String
             }
             set {
-              snapshot.updateValue(newValue, forKey: "__typename")
+              resultMap.updateValue(newValue, forKey: "__typename")
             }
           }
 
           /// Will new commits pushed to this branch dismiss pull request review approvals.
           public var hasDismissableStaleReviews: Bool {
             get {
-              return snapshot["hasDismissableStaleReviews"]! as! Bool
+              return resultMap["hasDismissableStaleReviews"]! as! Bool
             }
             set {
-              snapshot.updateValue(newValue, forKey: "hasDismissableStaleReviews")
+              resultMap.updateValue(newValue, forKey: "hasDismissableStaleReviews")
             }
           }
 
           /// Are reviews required to update this branch.
           public var hasRequiredReviews: Bool {
             get {
-              return snapshot["hasRequiredReviews"]! as! Bool
+              return resultMap["hasRequiredReviews"]! as! Bool
             }
             set {
-              snapshot.updateValue(newValue, forKey: "hasRequiredReviews")
+              resultMap.updateValue(newValue, forKey: "hasRequiredReviews")
             }
           }
 
           /// Are status checks required to update this branch.
           public var hasRequiredStatusChecks: Bool {
             get {
-              return snapshot["hasRequiredStatusChecks"]! as! Bool
+              return resultMap["hasRequiredStatusChecks"]! as! Bool
             }
             set {
-              snapshot.updateValue(newValue, forKey: "hasRequiredStatusChecks")
+              resultMap.updateValue(newValue, forKey: "hasRequiredStatusChecks")
             }
           }
 
           /// Is pushing to this branch restricted.
           public var hasRestrictedPushes: Bool {
             get {
-              return snapshot["hasRestrictedPushes"]! as! Bool
+              return resultMap["hasRestrictedPushes"]! as! Bool
             }
             set {
-              snapshot.updateValue(newValue, forKey: "hasRestrictedPushes")
+              resultMap.updateValue(newValue, forKey: "hasRestrictedPushes")
             }
           }
 
           /// Is dismissal of pull request reviews restricted.
           public var hasRestrictedReviewDismissals: Bool {
             get {
-              return snapshot["hasRestrictedReviewDismissals"]! as! Bool
+              return resultMap["hasRestrictedReviewDismissals"]! as! Bool
             }
             set {
-              snapshot.updateValue(newValue, forKey: "hasRestrictedReviewDismissals")
+              resultMap.updateValue(newValue, forKey: "hasRestrictedReviewDismissals")
             }
           }
 
           /// Are branches required to be up to date before merging.
           public var hasStrictRequiredStatusChecks: Bool {
             get {
-              return snapshot["hasStrictRequiredStatusChecks"]! as! Bool
+              return resultMap["hasStrictRequiredStatusChecks"]! as! Bool
             }
             set {
-              snapshot.updateValue(newValue, forKey: "hasStrictRequiredStatusChecks")
+              resultMap.updateValue(newValue, forKey: "hasStrictRequiredStatusChecks")
             }
           }
 
           /// Can admins overwrite branch protection.
           public var isAdminEnforced: Bool {
             get {
-              return snapshot["isAdminEnforced"]! as! Bool
+              return resultMap["isAdminEnforced"]! as! Bool
             }
             set {
-              snapshot.updateValue(newValue, forKey: "isAdminEnforced")
+              resultMap.updateValue(newValue, forKey: "isAdminEnforced")
             }
           }
 
           /// Identifies the name of the protected branch.
           public var name: String {
             get {
-              return snapshot["name"]! as! String
+              return resultMap["name"]! as! String
             }
             set {
-              snapshot.updateValue(newValue, forKey: "name")
+              resultMap.updateValue(newValue, forKey: "name")
             }
           }
 
           /// List of required status check contexts that must pass for commits to be accepted to this branch.
           public var requiredStatusCheckContexts: [String?]? {
             get {
-              return snapshot["requiredStatusCheckContexts"] as? [String?]
+              return resultMap["requiredStatusCheckContexts"] as? [String?]
             }
             set {
-              snapshot.updateValue(newValue, forKey: "requiredStatusCheckContexts")
+              resultMap.updateValue(newValue, forKey: "requiredStatusCheckContexts")
             }
           }
         }
@@ -561,42 +561,42 @@ public final class RepositoryQuery: GraphQLQuery {
           GraphQLField("totalCount", type: .nonNull(.scalar(Int.self))),
         ]
 
-        public var snapshot: Snapshot
+        public private(set) var resultMap: ResultMap
 
-        public init(snapshot: Snapshot) {
-          self.snapshot = snapshot
+        public init(unsafeResultMap: ResultMap) {
+          self.resultMap = unsafeResultMap
         }
 
         public init(nodes: [Node?]? = nil, totalCount: Int) {
-          self.init(snapshot: ["__typename": "RepositoryTopicConnection", "nodes": nodes.flatMap { $0.map { $0.flatMap { $0.snapshot } } }, "totalCount": totalCount])
+          self.init(unsafeResultMap: ["__typename": "RepositoryTopicConnection", "nodes": nodes.flatMap { (value: [Node?]) -> [ResultMap?] in value.map { (value: Node?) -> ResultMap? in value.flatMap { (value: Node) -> ResultMap in value.resultMap } } }, "totalCount": totalCount])
         }
 
         public var __typename: String {
           get {
-            return snapshot["__typename"]! as! String
+            return resultMap["__typename"]! as! String
           }
           set {
-            snapshot.updateValue(newValue, forKey: "__typename")
+            resultMap.updateValue(newValue, forKey: "__typename")
           }
         }
 
         /// A list of nodes.
         public var nodes: [Node?]? {
           get {
-            return (snapshot["nodes"] as? [Snapshot?]).flatMap { $0.map { $0.flatMap { Node(snapshot: $0) } } }
+            return (resultMap["nodes"] as? [ResultMap?]).flatMap { (value: [ResultMap?]) -> [Node?] in value.map { (value: ResultMap?) -> Node? in value.flatMap { (value: ResultMap) -> Node in Node(unsafeResultMap: value) } } }
           }
           set {
-            snapshot.updateValue(newValue.flatMap { $0.map { $0.flatMap { $0.snapshot } } }, forKey: "nodes")
+            resultMap.updateValue(newValue.flatMap { (value: [Node?]) -> [ResultMap?] in value.map { (value: Node?) -> ResultMap? in value.flatMap { (value: Node) -> ResultMap in value.resultMap } } }, forKey: "nodes")
           }
         }
 
         /// Identifies the total count of items in the connection.
         public var totalCount: Int {
           get {
-            return snapshot["totalCount"]! as! Int
+            return resultMap["totalCount"]! as! Int
           }
           set {
-            snapshot.updateValue(newValue, forKey: "totalCount")
+            resultMap.updateValue(newValue, forKey: "totalCount")
           }
         }
 
@@ -608,32 +608,32 @@ public final class RepositoryQuery: GraphQLQuery {
             GraphQLField("topic", type: .nonNull(.object(Topic.selections))),
           ]
 
-          public var snapshot: Snapshot
+          public private(set) var resultMap: ResultMap
 
-          public init(snapshot: Snapshot) {
-            self.snapshot = snapshot
+          public init(unsafeResultMap: ResultMap) {
+            self.resultMap = unsafeResultMap
           }
 
           public init(topic: Topic) {
-            self.init(snapshot: ["__typename": "RepositoryTopic", "topic": topic.snapshot])
+            self.init(unsafeResultMap: ["__typename": "RepositoryTopic", "topic": topic.resultMap])
           }
 
           public var __typename: String {
             get {
-              return snapshot["__typename"]! as! String
+              return resultMap["__typename"]! as! String
             }
             set {
-              snapshot.updateValue(newValue, forKey: "__typename")
+              resultMap.updateValue(newValue, forKey: "__typename")
             }
           }
 
           /// The topic.
           public var topic: Topic {
             get {
-              return Topic(snapshot: snapshot["topic"]! as! Snapshot)
+              return Topic(unsafeResultMap: resultMap["topic"]! as! ResultMap)
             }
             set {
-              snapshot.updateValue(newValue.snapshot, forKey: "topic")
+              resultMap.updateValue(newValue.resultMap, forKey: "topic")
             }
           }
 
@@ -645,32 +645,32 @@ public final class RepositoryQuery: GraphQLQuery {
               GraphQLField("name", type: .nonNull(.scalar(String.self))),
             ]
 
-            public var snapshot: Snapshot
+            public private(set) var resultMap: ResultMap
 
-            public init(snapshot: Snapshot) {
-              self.snapshot = snapshot
+            public init(unsafeResultMap: ResultMap) {
+              self.resultMap = unsafeResultMap
             }
 
             public init(name: String) {
-              self.init(snapshot: ["__typename": "Topic", "name": name])
+              self.init(unsafeResultMap: ["__typename": "Topic", "name": name])
             }
 
             public var __typename: String {
               get {
-                return snapshot["__typename"]! as! String
+                return resultMap["__typename"]! as! String
               }
               set {
-                snapshot.updateValue(newValue, forKey: "__typename")
+                resultMap.updateValue(newValue, forKey: "__typename")
               }
             }
 
             /// The topic's name.
             public var name: String {
               get {
-                return snapshot["name"]! as! String
+                return resultMap["name"]! as! String
               }
               set {
-                snapshot.updateValue(newValue, forKey: "name")
+                resultMap.updateValue(newValue, forKey: "name")
               }
             }
           }
@@ -685,32 +685,32 @@ public final class RepositoryQuery: GraphQLQuery {
           GraphQLField("name", type: .nonNull(.scalar(String.self))),
         ]
 
-        public var snapshot: Snapshot
+        public private(set) var resultMap: ResultMap
 
-        public init(snapshot: Snapshot) {
-          self.snapshot = snapshot
+        public init(unsafeResultMap: ResultMap) {
+          self.resultMap = unsafeResultMap
         }
 
         public init(name: String) {
-          self.init(snapshot: ["__typename": "CodeOfConduct", "name": name])
+          self.init(unsafeResultMap: ["__typename": "CodeOfConduct", "name": name])
         }
 
         public var __typename: String {
           get {
-            return snapshot["__typename"]! as! String
+            return resultMap["__typename"]! as! String
           }
           set {
-            snapshot.updateValue(newValue, forKey: "__typename")
+            resultMap.updateValue(newValue, forKey: "__typename")
           }
         }
 
         /// The formal name of the CoC
         public var name: String {
           get {
-            return snapshot["name"]! as! String
+            return resultMap["name"]! as! String
           }
           set {
-            snapshot.updateValue(newValue, forKey: "name")
+            resultMap.updateValue(newValue, forKey: "name")
           }
         }
       }
@@ -723,32 +723,32 @@ public final class RepositoryQuery: GraphQLQuery {
           GraphQLField("name", type: .nonNull(.scalar(String.self))),
         ]
 
-        public var snapshot: Snapshot
+        public private(set) var resultMap: ResultMap
 
-        public init(snapshot: Snapshot) {
-          self.snapshot = snapshot
+        public init(unsafeResultMap: ResultMap) {
+          self.resultMap = unsafeResultMap
         }
 
         public init(name: String) {
-          self.init(snapshot: ["__typename": "License", "name": name])
+          self.init(unsafeResultMap: ["__typename": "License", "name": name])
         }
 
         public var __typename: String {
           get {
-            return snapshot["__typename"]! as! String
+            return resultMap["__typename"]! as! String
           }
           set {
-            snapshot.updateValue(newValue, forKey: "__typename")
+            resultMap.updateValue(newValue, forKey: "__typename")
           }
         }
 
         /// The license full name specified by <https://spdx.org/licenses>
         public var name: String {
           get {
-            return snapshot["name"]! as! String
+            return resultMap["name"]! as! String
           }
           set {
-            snapshot.updateValue(newValue, forKey: "name")
+            resultMap.updateValue(newValue, forKey: "name")
           }
         }
       }

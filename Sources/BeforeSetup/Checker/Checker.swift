@@ -69,7 +69,8 @@ private extension Checker {
 
     func expect(_ current: JSONObject, equals expected: Mirror, recursiveLevel: Int) {
         let numberOfSpaces = recursiveLevel * 2
-        for case let (label?, Optional<Any>.some(value)) in expected.children {
+        for case let (label?, value as Optional<Any>) in expected.children {
+            guard value != nil else { continue }
             switch (value, current[label]) {
             case let (expectedValues, currentValues) as ([AcceptableNonliteral], JSONObject):
                 let currentValues = currentValues["nodes"] as? [JSONObject] ?? []

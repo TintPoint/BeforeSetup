@@ -22,7 +22,7 @@ class ProcessedArguments {
     fileprivate(set) var repositories: [(owner: String, name: String, configurationsURL: URL?)]
 
     init() {
-        githubToken = Keychain(service: beforeSetupIdentifier)
+        githubToken = Keychain(service: beforeSetupIdentifier)["token"]
         if #available(macOS 10.12, *) {
             defaultDirectoryURL = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".beforesetup", isDirectory: true)
         } else {
@@ -67,7 +67,7 @@ class SupportedArguments {
 
         private let token: Processor = {
             processedArguments.githubToken = nextArgument
-            Keychain(service: beforeSetupIdentifier) = nextArgument
+            Keychain(service: beforeSetupIdentifier)["token"] = nextArgument
         }
 
         private let configdir: Processor = {
