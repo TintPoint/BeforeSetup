@@ -1,5 +1,12 @@
 # Change Log
 
+## Unreleased
+
+### Added
+
+- Support `Swift 4.2`.
+    - Added by [Justin Jia](http://github.com/JustinJiaDev).
+
 ## 0.2
 
 ### Added

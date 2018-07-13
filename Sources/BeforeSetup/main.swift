@@ -2,6 +2,7 @@ import Apollo
 import Foundation
 
 let beforeSetupVersion = "0.2"
+let beforeSetupIdentifier = "com.tintpoint.BeforeSetup"
 
 class BeforeSetup {
     private let configuration: URLSessionConfiguration

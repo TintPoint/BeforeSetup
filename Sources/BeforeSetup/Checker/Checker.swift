@@ -51,7 +51,7 @@ private extension Checker {
         should be "\(expectedValue)" but currently is "\(currentValue ?? [])"
         """
         check(label: label, outputIfMatch: matchOutput, outputIfMismatch: mismatchOutput, outputIndentation: numberOfSpaces) {
-            expectedValue.count == currentValue?.count && zip(expectedValue, currentValue ?? []).reduce(true, { $0 && $1.0 == $1.1 })
+            expectedValue == currentValue
         }
     }
 
@@ -69,7 +69,8 @@ private extension Checker {
 
     func expect(_ current: JSONObject, equals expected: Mirror, recursiveLevel: Int) {
         let numberOfSpaces = recursiveLevel * 2
-        for case let (label?, Optional<Any>.some(value)) in expected.children {
+        for case let (label?, value as Optional<Any>) in expected.children {
+            guard value != nil else { continue }
             switch (value, current[label]) {
             case let (expectedValues, currentValues) as ([AcceptableNonliteral], JSONObject):
                 let currentValues = currentValues["nodes"] as? [JSONObject] ?? []
@@ -81,9 +82,9 @@ private extension Checker {
                 let expectedValue = Mirror(reflecting: expectedValue)
                 Terminal.output(indentation: numberOfSpaces, isMatch: true, label: label, text: "")
                 expect(currentValue, equals: expectedValue, recursiveLevel: recursiveLevel + 1)
-            case let (expectedValue, currentValue) as ([AnyHashable], [AnyHashable]?):
-                check(label, expect: currentValue, equals: expectedValue, outputIndentation: numberOfSpaces)
             case let (expectedValue, currentValue) as (AnyHashable, AnyHashable?):
+                check(label, expect: currentValue, equals: expectedValue, outputIndentation: numberOfSpaces)
+            case let (expectedValue, currentValue) as ([AnyHashable], [AnyHashable]?):
                 check(label, expect: currentValue, equals: expectedValue, outputIndentation: numberOfSpaces)
             case let (expectedValue, currentValue):
                 let expectedValue = String(describing: expectedValue)
